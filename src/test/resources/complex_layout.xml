@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <com.danielpuiu.swing.component.RelativeContainer margins="5, 5, 5, 5">
 
+    <com.danielpuiu.swing.component.RelativeContainer margins="5, 5, 5, 5">
+    </com.danielpuiu.swing.component.RelativeContainer>
 
+    <com.danielpuiu.swing.component.RelativeContainer margins="5, 5, 5, 5">
+    </com.danielpuiu.swing.component.RelativeContainer>
+
+    <com.danielpuiu.swing.component.RelativeContainer margins="5, 5, 5, 5">
+    </com.danielpuiu.swing.component.RelativeContainer>
+
+    <com.danielpuiu.swing.component.RelativeContainer margins="5, 5, 5, 5">
+    </com.danielpuiu.swing.component.RelativeContainer>
 
 </com.danielpuiu.swing.component.RelativeContainer>

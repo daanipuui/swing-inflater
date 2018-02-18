@@ -35,4 +35,12 @@ public class TestLoader {
         textField = (JTextField) container.getComponent(3);
         assertEquals("#4", textField.getName());
     }
+
+    @Test
+    public void testLoader_ComplexLayout() {
+        ComponentLoader loader = new ComponentLoader();
+        RelativeContainer container = loader.load("src/test/resources/complex_layout.xml");
+
+        assertEquals(4, container.getComponents().length);
+    }
 }

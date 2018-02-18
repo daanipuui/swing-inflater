@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<com.danielpuiu.swing.component.RelativeContainer margins="20, 20, 20, 20" padding="10, 10, 10, 10">
+
+    <JLabel
+        name="#1"
+        background="0xFF0096"
+        text="Description"/>
+
+    <JTextField
+        name="#2"
+        background="0xFF0000"
+        rightOf="#1"
+        alignLeft="#4"
+        alignParentRight="true"/>
+
+    <JLabel
+        name="#3"
+        background="0xFF00FF"
+        width=".5"
+        text="Market name"
+        below="#1"/>
+
+    <JTextField
+        name="#4"
+        background="0x00FF00"
+        rightOf="#3"
+        alignTop="#3"
+        alignParentRight="true"
+        alignParentBottom="true"/>
+
+</com.danielpuiu.swing.component.RelativeContainer>

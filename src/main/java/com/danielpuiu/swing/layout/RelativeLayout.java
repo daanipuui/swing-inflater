@@ -136,17 +136,14 @@ public class RelativeLayout implements LayoutManager2 {
 
     @Override
     public void layoutContainer(Container parent) {
-        int width = getParentWidth(parent);
-        int height = getParentHeight(parent);
-
         synchronized (parent.getTreeLock()) {
             Set<Component> components = getParentComponents(parent);
 
             computeLeftToRight(getLeftMostComponents(components), margins.left);
-            computeTopToBottom(getTopMostComponents(components), margins.top);
+            alignLeftToRight(parent, components);
 
-            alignLeftToRight(parent, width, components);
-            alignTopToBottom(parent, height, components);
+            computeTopToBottom(getTopMostComponents(components), margins.top);
+            alignTopToBottom(parent, components);
 
             setDimensions();
         }
@@ -181,10 +178,10 @@ public class RelativeLayout implements LayoutManager2 {
 
         if (componentToWidthWeight.containsKey(component)) {
             double percent = componentToWidthWeight.get(component);
-            return (int) (getParentWidth(component.getParent()) * percent);
+            return (int) (getParentWidth(component.getParent()) * percent) - (padding.left + padding.right);
         }
 
-        return component.getPreferredSize().width;
+        return componentDimension.apply(component).width;
     }
 
     private Set<Component> getLeftMostComponents(Set<Component> components) {
@@ -213,10 +210,10 @@ public class RelativeLayout implements LayoutManager2 {
 
         if (componentToHeightWeight.containsKey(component)) {
             double percent = componentToHeightWeight.get(component);
-            return (int) (getParentHeight(component.getParent()) * percent);
+            return (int) (getParentHeight(component.getParent()) * percent) - (padding.top + padding.bottom);
         }
 
-        return component.getPreferredSize().height;
+        return componentDimension.apply(component).height;
     }
 
     private Set<Component> getTopMostComponents(Set<Component> components) {
@@ -224,11 +221,13 @@ public class RelativeLayout implements LayoutManager2 {
         return components.stream().filter(component -> !bottomComponents.contains(component)).collect(Collectors.toSet());
     }
 
-    private void alignLeftToRight(Container parent, int width, Set<Component> components) {
+    private void alignLeftToRight(Container parent, Set<Component> components) {
         computeLeftToRightAlignments(getLeftMostComponents(components));
+
+        int width = margins.left + getParentWidth(parent) - padding.right;
         for (Component component: alignRight.getOrDefault(parent, Collections.emptySet())) {
             Bounds bounds = componentToBounds.get(component);
-            bounds.width = component.isVisible()? margins.left + width - bounds.x: 0;
+            bounds.width = component.isVisible()? width - bounds.x: 0;
         }
     }
 
@@ -259,11 +258,13 @@ public class RelativeLayout implements LayoutManager2 {
         }
     }
 
-    private void alignTopToBottom(Container parent, int height, Set<Component> components) {
+    private void alignTopToBottom(Container parent, Set<Component> components) {
         computeTopToBottomAlignments(getTopMostComponents(components));
+
+        int height = margins.top + getParentHeight(parent) - padding.bottom;
         for (Component component: alignBottom.getOrDefault(parent, Collections.emptySet())) {
             Bounds bounds = componentToBounds.get(component);
-            bounds.height = component.isVisible()? margins.top + height - bounds.y: 0;
+            bounds.height = component.isVisible()? height - bounds.y: 0;
         }
     }
 

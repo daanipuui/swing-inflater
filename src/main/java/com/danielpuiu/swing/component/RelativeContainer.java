@@ -29,20 +29,20 @@ public class RelativeContainer extends Container {
         relativeLayout.alignLeft(first, second);
     }
 
-    public void alignParentBottom(Component component) {
-        relativeLayout.alignBottom(component, this);
+    public void alignParentBottom(Component component, boolean align) {
+        alignBottom(component, this);
     }
 
-    public void alignParentLeft(Component component) {
-        relativeLayout.alignLeft(component, this);
+    public void alignParentLeft(Component component, boolean align) {
+        alignLeft(component, this);
     }
 
-    public void alignParentRight(Component component) {
-        relativeLayout.alignRight(component, this);
+    public void alignParentRight(Component component, boolean align) {
+        alignRight(component, this);
     }
 
-    public void alignParentTop(Component component) {
-        relativeLayout.alignTop(component, this);
+    public void alignParentTop(Component component, boolean align) {
+        alignTop(component, this);
     }
 
     public void alignRight(Component first, Component second) {

@@ -1,6 +1,6 @@
 package com.danielpuiu.swing.xml;
 
-import com.danielpuiu.swing.component.RelativeContainer;
+import com.danielpuiu.swing.type.TypeConversion;
 import com.danielpuiu.swing.type.TypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,23 +14,22 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class ComponentHandler extends DefaultHandler {
+class ComponentHandler extends DefaultHandler implements TypeConversion {
 
-    private static final List<String> relativeLayoutMethods = Stream.of(RelativeContainer.class.getDeclaredMethods()).map(Method::getName).collect(Collectors.toList());
+    private static final String VALUE_DELIMITER = ",";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final List<String> importedPackageNames = initPackageNames();
+    private final Set<String> importedPackageNames = initPackageNames();
 
     private final HashMap<String, Component> nameToComponent = new HashMap<>();
 
     private Stack<Component> elements = new Stack<>();
 
-    private List<Runnable> relativeMethods = new ArrayList<>();
+    private List<Runnable> futures = new ArrayList<>();
 
     <T> T getRootElement() {
         return (T) elements.pop();
@@ -38,6 +37,20 @@ class ComponentHandler extends DefaultHandler {
 
     public <T> T getComponent(String name) {
         return (T) nameToComponent.get(name);
+    }
+
+    ComponentHandler() {
+        TypeConverter.registerConverter(this);
+    }
+
+    @Override
+    public List<String> getHandledTypes() {
+        return Arrays.asList(Component.class.getName(), Component.class.getSimpleName(), "component");
+    }
+
+    @Override
+    public Object convert(String value) {
+        return getComponent(value);
     }
 
     @Override
@@ -53,7 +66,7 @@ class ComponentHandler extends DefaultHandler {
             }
 
             elements.add(element);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new SAXException(e.getMessage());
         }
     }
@@ -68,6 +81,7 @@ class ComponentHandler extends DefaultHandler {
         Object parent = elements.peek();
 
         try {
+            // TODO
             Method method = getMethod("add", parent.getClass(), element.getClass());
             method.invoke(parent, element);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -79,50 +93,60 @@ class ComponentHandler extends DefaultHandler {
     public void endDocument() throws SAXException {
         super.endDocument();
 
-        relativeMethods.forEach(Runnable::run);
+        futures.forEach(Runnable::run);
     }
 
-    private void buildElement(Component element, Attributes attributes) throws NoSuchMethodException {
+    private void buildElement(Component element, Attributes attributes) {
         for (int i = 0; i < attributes.getLength(); i++) {
-            String localName = attributes.getLocalName(i);
-            String value = attributes.getValue(i);
+            String methodName = attributes.getLocalName(i);
+            String[] arguments = attributes.getValue(i).split(VALUE_DELIMITER);
 
-            if (relativeLayoutMethods.contains(localName)) {
-                relativeMethods.add(new RelativeLayoutMethodTranslator(this, element, localName, value));
-            } else {
-                invokeMethod(element, localName, value);
+            List<Method> methods = getCandidateMethods(element, methodName, arguments.length);
+            if (!methods.isEmpty()) {
+                invokeMethod(element, methods, arguments);
+                continue;
             }
+
+            futures.add(() -> invokeParentMethod(element, methodName, arguments));
         }
     }
 
-    private void invokeMethod(Component element, String localName, String value) throws NoSuchMethodException {
-        String methodName = "set" + capitalize(localName);
-        String[] values = value.split(",");
+    private void invokeParentMethod(Component element, String methodName, String[] arguments) {
+        Component parent = element.getParent();
+        List<Method> methods = getCandidateMethods(parent, methodName, arguments.length + 1);
+        invokeMethod(parent, methods, Stream.concat(Stream.of(element.getName()), Stream.of(arguments)).toArray(String[]::new));
+    }
 
-        Predicate<Method> methodMatch = method -> method.getName().equals(methodName) && method.getGenericParameterTypes().length == values.length;
-        List<Method> methods = Stream.of(element.getClass().getMethods()).filter(methodMatch).collect(Collectors.toList());
+    private List<Method> getCandidateMethods(Component element, String methodName, int argumentsCount) {
+        List<String> methodNames = Arrays.asList(methodName, "set" + capitalize(methodName));
+        List<Class<?>> returnTypes = Arrays.asList(void.class, boolean.class, Boolean.class);
 
-        for (Method method: methods) {
+        return Stream.of(element.getClass().getMethods())
+                .filter(method -> methodNames.contains(method.getName()))
+                .filter(method -> method.getParameterCount() == argumentsCount)
+                .filter(method -> returnTypes.contains(method.getReturnType()))
+                .collect(Collectors.toList());
+    }
+
+    private void invokeMethod(Component element, List<Method> candidateMethods, String[] arguments) {
+        for (Method method: candidateMethods) {
             try {
-                method.invoke(element, getArguments(method.getGenericParameterTypes(), values));
+                method.invoke(element, getArguments(method.getGenericParameterTypes(), arguments));
+                logger.info("Invoked method [{}] on [{}] with parameters [{}].", method.getName(), element.getName(), Arrays.toString(arguments));
                 return;
             } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                logger.trace("", e.getMessage());
+                logger.debug("Cannot invoke method [{}] on [{}] with parameters [{}] because [{}]", method.getName(), element.getName(), Arrays.toString(arguments), e.getCause());
             }
         }
-
-        logger.error("Cannot invoke [{}] with arguments [{}] on component [{}].", methodName, Arrays.toString(values), element.getName());
-        throw new NoSuchMethodException(methodName);
     }
 
     private Object[] getArguments(Type[] types, String[] values) {
-        Object[] result = new Object[values.length];
-
+        Object[] convertedValues = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
-            result[i] = TypeConverter.convert(types[i].getTypeName(), values[i]);
+            convertedValues[i] = TypeConverter.convert(types[i].getTypeName(), values[i]);
         }
 
-        return result;
+        return convertedValues;
     }
 
     private String capitalize(String attributeLocalName) {
@@ -155,12 +179,16 @@ class ComponentHandler extends DefaultHandler {
         throw new NoSuchMethodException(String.join(", ", errorMessages));
     }
 
-    private List<String> initPackageNames() {
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("java.awt.");
-        list.add("javax.swing.");
+    void registerPackageName(String... packageNames) {
+        importedPackageNames.addAll(Arrays.asList(packageNames));
+    }
 
-        return list;
+    private Set<String> initPackageNames() {
+        Set<String> set = new HashSet<>();
+        set.add("");
+        set.add("java.awt.");
+        set.add("javax.swing.");
+
+        return set;
     }
 }

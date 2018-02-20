@@ -32,4 +32,8 @@ public class ComponentLoader {
     public <T> T getComponent(String name) {
         return componentHandler.getComponent(name);
     }
+
+    public void register(String... packageNames) {
+        componentHandler.registerPackageName(packageNames);
+    }
 }

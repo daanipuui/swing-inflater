@@ -28,7 +28,10 @@ public class TypeConverter {
     }
 
     public static void registerConverter(Class<? extends TypeConversion> typeConversion) {
-        TypeConversion conversion = newInstance(typeConversion);
+        registerConverter(newInstance(typeConversion));
+    }
+
+    public static void registerConverter(TypeConversion conversion) {
         for (String type: conversion.getHandledTypes()) {
             REGISTERED_CONVERTERS.put(type, conversion);
         }
@@ -36,6 +39,10 @@ public class TypeConverter {
 
     public static void unregisterConverter(Class<? extends TypeConversion> typeConversion) {
         newInstance(typeConversion).getHandledTypes().forEach(REGISTERED_CONVERTERS::remove);
+    }
+
+    public static boolean handles(String type) {
+        return REGISTERED_CONVERTERS.containsKey(type);
     }
 
     private static TypeConversion newInstance(Class<? extends TypeConversion> typeConversion) {

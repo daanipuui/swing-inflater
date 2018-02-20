@@ -10,6 +10,7 @@
         name="#2"
         background="0xFF0000"
         rightOf="#1"
+        centerVertical="#1"
         alignParentRight="true"/>
 
     <JLabel
@@ -17,7 +18,8 @@
         background="0xFF00FF"
         width=".5"
         text="Market name"
-        below="#1"/>
+        below="#1"
+        centerVerticalInParent="true"/>
 
     <JTextField
         name="#4"

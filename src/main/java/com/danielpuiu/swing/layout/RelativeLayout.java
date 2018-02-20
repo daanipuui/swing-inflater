@@ -19,6 +19,9 @@ public class RelativeLayout implements LayoutManager2 {
     private final Map<Component, Set<Component>> alignRight = new HashMap<>();
     private final Map<Component, Set<Component>> alignTop = new HashMap<>();
 
+    private final Map<Component, Set<Component>> centerHorizontal = new HashMap<>();
+    private final Map<Component, Set<Component>> centerVertical = new HashMap<>();
+
     private final Map<Component, Bounds> componentToBounds = new HashMap<>();
 
     private final Map<Component, Double> componentToWidthWeight = new HashMap<>();
@@ -139,14 +142,33 @@ public class RelativeLayout implements LayoutManager2 {
         synchronized (parent.getTreeLock()) {
             Set<Component> components = getParentComponents(parent);
 
-            computeLeftToRight(getLeftMostComponents(components), margins.left);
-            alignLeftToRight(parent, components);
-
-            computeTopToBottom(getTopMostComponents(components), margins.top);
-            alignTopToBottom(parent, components);
+            layoutLeftToRight(parent, components);
+            layoutTopToBottom(parent, components);
 
             setDimensions();
         }
+    }
+
+    private void layoutLeftToRight(Container parent, Set<Component> components) {
+        Set<Component> leftMostComponents = getLeftMostComponents(components);
+        computeLeftToRight(leftMostComponents, margins.left);
+
+        computeLeftToRightAlignments(leftMostComponents);
+        alignToRight(parent);
+
+        centerOnComponentHorizontally(parent, new Bounds(parent));
+        centerHorizontal(leftMostComponents);
+    }
+
+    private void layoutTopToBottom(Container parent, Set<Component> components) {
+        Set<Component> topMostComponents = getTopMostComponents(components);
+        computeTopToBottom(topMostComponents, margins.top);
+
+        computeTopToBottomAlignments(topMostComponents);
+        alignToBottom(parent);
+
+        centerOnComponentVertically(parent, new Bounds(parent));
+        centerVertical(topMostComponents);
     }
 
     private int getParentWidth(Container parent) {
@@ -221,9 +243,7 @@ public class RelativeLayout implements LayoutManager2 {
         return components.stream().filter(component -> !bottomComponents.contains(component)).collect(Collectors.toSet());
     }
 
-    private void alignLeftToRight(Container parent, Set<Component> components) {
-        computeLeftToRightAlignments(getLeftMostComponents(components));
-
+    private void alignToRight(Container parent) {
         int width = margins.left + getParentWidth(parent) - padding.right;
         for (Component component: alignRight.getOrDefault(parent, Collections.emptySet())) {
             Bounds bounds = componentToBounds.get(component);
@@ -258,9 +278,7 @@ public class RelativeLayout implements LayoutManager2 {
         }
     }
 
-    private void alignTopToBottom(Container parent, Set<Component> components) {
-        computeTopToBottomAlignments(getTopMostComponents(components));
-
+    private void alignToBottom(Container parent) {
         int height = margins.top + getParentHeight(parent) - padding.bottom;
         for (Component component: alignBottom.getOrDefault(parent, Collections.emptySet())) {
             Bounds bounds = componentToBounds.get(component);
@@ -294,6 +312,47 @@ public class RelativeLayout implements LayoutManager2 {
             computeTopToBottomAlignments(topToBottom.get(reference));
         }
     }
+
+    private void centerHorizontal(Set<Component> components) {
+        if (isEmpty(components)) {
+            return;
+        }
+
+        for (Component reference: components) {
+            centerOnComponentHorizontally(reference, componentToBounds.get(reference));
+            centerHorizontal(leftToRight.get(reference));
+        }
+    }
+
+    private void centerOnComponentHorizontally(Component reference, Bounds referenceBounds) {
+        int referenceMiddle = referenceBounds.x + referenceBounds.width/2;
+
+        for (Component component: centerHorizontal.getOrDefault(reference, Collections.emptySet())) {
+            Bounds bounds = componentToBounds.get(component);
+            bounds.x -= bounds.x + bounds.width/2 - referenceMiddle;
+        }
+    }
+
+    private void centerVertical(Set<Component> components) {
+        if (isEmpty(components)) {
+            return;
+        }
+
+        for (Component reference: components) {
+            centerOnComponentVertically(reference, componentToBounds.get(reference));
+            centerVertical(topToBottom.get(reference));
+        }
+    }
+
+    private void centerOnComponentVertically(Component reference, Bounds referenceBounds) {
+        int referenceMiddle = referenceBounds.y + referenceBounds.height/2;
+
+        for (Component component: centerVertical.getOrDefault(reference, Collections.emptySet())) {
+            Bounds bounds = componentToBounds.get(component);
+            bounds.y -= bounds.y + bounds.height/2 - referenceMiddle;
+        }
+    }
+
 
     private boolean isEmpty(Set<Component> components) {
         return Objects.isNull(components) || components.isEmpty();
@@ -350,11 +409,11 @@ public class RelativeLayout implements LayoutManager2 {
     }
 
     public void centerHorizontal(Component first, Component second) {
-        throw new UnsupportedOperationException();
+        centerHorizontal.computeIfAbsent(second, SET_INITIALIZER).add(first);
     }
 
     public void centerVertical(Component first, Component second) {
-        throw new UnsupportedOperationException();
+        centerVertical.computeIfAbsent(second, SET_INITIALIZER).add(first);
     }
 
     public void leftOf(Component first, Component second) {

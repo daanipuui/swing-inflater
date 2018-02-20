@@ -132,10 +132,10 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
         for (Method method: candidateMethods) {
             try {
                 method.invoke(element, getArguments(method.getGenericParameterTypes(), arguments));
-                logger.info("Invoked method [{}] on [{}] with parameters [{}].", method.getName(), element.getName(), Arrays.toString(arguments));
+                logger.info("Invoked method [{}] on [{}] with parameters {}.", method.getName(), element.getName(), Arrays.toString(arguments));
                 return;
             } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                logger.debug("Cannot invoke method [{}] on [{}] with parameters [{}] because [{}]", method.getName(), element.getName(), Arrays.toString(arguments), e.getCause());
+                logger.debug("Cannot invoke method [{}] on [{}] with parameters {} because", method.getName(), element.getName(), Arrays.toString(arguments), e);
             }
         }
     }

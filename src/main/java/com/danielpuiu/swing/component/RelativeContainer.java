@@ -61,8 +61,16 @@ public class RelativeContainer extends Container {
         relativeLayout.centerHorizontal(first, second);
     }
 
+    public void centerHorizontalInParent(Component component, boolean center) {
+        relativeLayout.centerHorizontal(component, this);
+    }
+
     public void centerVertical(Component first, Component second) {
         relativeLayout.centerVertical(first, second);
+    }
+
+    public void centerVerticalInParent(Component component, boolean center) {
+        relativeLayout.centerVertical(component, this);
     }
 
     public void leftOf(Component first, Component second) {

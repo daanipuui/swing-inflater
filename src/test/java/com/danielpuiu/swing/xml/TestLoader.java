@@ -1,6 +1,5 @@
 package com.danielpuiu.swing.xml;
 
-import com.danielpuiu.swing.component.RelativeContainer;
 import org.junit.Test;
 
 import javax.swing.*;
@@ -13,7 +12,7 @@ public class TestLoader {
     @Test
     public void testLoader() {
         ComponentLoader loader = new ComponentLoader();
-        RelativeContainer container = loader.load("src/test/resources/layout.xml");
+        JPanel container = loader.load("src/test/resources/layout.xml");
 
         assertEquals(4, container.getComponents().length);
 
@@ -39,7 +38,7 @@ public class TestLoader {
     @Test
     public void testLoader_ComplexLayout() {
         ComponentLoader loader = new ComponentLoader();
-        RelativeContainer container = loader.load("src/test/resources/complex_layout.xml");
+        JPanel container = loader.load("src/test/resources/complex_layout.xml");
 
         assertEquals(4, container.getComponents().length);
     }

@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.awt.Component;
 import java.io.IOException;
 
 public class ComponentLoader {
@@ -21,7 +22,7 @@ public class ComponentLoader {
             SAXParser parser = factory.newSAXParser();
             parser.parse(filePath, componentHandler);
 
-            return componentHandler.getRootElement();
+            return componentHandler.getRoot();
         } catch (ParserConfigurationException | SAXException | IOException e) {
             logger.error("Error", e);
         }
@@ -29,7 +30,7 @@ public class ComponentLoader {
         return null;
     }
 
-    public <T> T getComponent(String name) {
+    public <T extends Component> T getComponent(String name) {
         return componentHandler.getComponent(name);
     }
 

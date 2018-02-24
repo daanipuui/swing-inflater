@@ -1,6 +1,12 @@
 package com.danielpuiu.swing.type;
 
-import com.danielpuiu.swing.type.conversion.*;
+import com.danielpuiu.swing.type.conversion.BooleanConversion;
+import com.danielpuiu.swing.type.conversion.ColorConversion;
+import com.danielpuiu.swing.type.conversion.DoubleConversion;
+import com.danielpuiu.swing.type.conversion.IntegerConversion;
+import com.danielpuiu.swing.type.conversion.LayoutConversion;
+import com.danielpuiu.swing.type.conversion.StringConversion;
+import com.danielpuiu.swing.util.MissingDefaultConstructorException;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,8 +21,12 @@ public class TypeConverter {
                 DoubleConversion.class,
                 BooleanConversion.class,
                 StringConversion.class,
-                ColorConversion.class
+                ColorConversion.class,
+                LayoutConversion.class
         ).forEach(TypeConverter::registerConverter);
+    }
+
+    private TypeConverter() {
     }
 
     public static Object convert(String type, String value) {
@@ -24,7 +34,7 @@ public class TypeConverter {
             return REGISTERED_CONVERTERS.get(type).convert(value);
         }
 
-        throw new IllegalArgumentException("Unregistered type: " + type);
+        throw new IllegalArgumentException("Unknown type: " + type);
     }
 
     public static void registerConverter(Class<? extends TypeConversion> typeConversion) {
@@ -39,6 +49,10 @@ public class TypeConverter {
 
     public static void unregisterConverter(Class<? extends TypeConversion> typeConversion) {
         newInstance(typeConversion).getHandledTypes().forEach(REGISTERED_CONVERTERS::remove);
+    }
+
+    public static void unregisterConverter(TypeConversion conversion) {
+        conversion.getHandledTypes().forEach(REGISTERED_CONVERTERS::remove);
     }
 
     public static boolean handles(String type) {

@@ -2,7 +2,7 @@ package com.danielpuiu.swing.type.conversion;
 
 import com.danielpuiu.swing.type.TypeConversion;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 

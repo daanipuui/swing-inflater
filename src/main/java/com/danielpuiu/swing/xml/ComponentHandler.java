@@ -1,5 +1,6 @@
 package com.danielpuiu.swing.xml;
 
+import com.danielpuiu.swing.constraints.ConstraintsConverter;
 import com.danielpuiu.swing.type.TypeConversion;
 import com.danielpuiu.swing.type.TypeConverter;
 import org.slf4j.Logger;
@@ -8,62 +9,75 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.danielpuiu.swing.util.ObjectUtil.cast;
+
 class ComponentHandler extends DefaultHandler implements TypeConversion {
 
+    private static final String Q_NAME_DELIMITER = ":";
     private static final String VALUE_DELIMITER = ",";
+
+    private static final String EMPTY_PREFIX = "";
+    private static final String LAYOUT_PREFIX = "layout";
+
+    private static final String SETTER_PREFIX = "set";
+    private static final String PACKAGE_DELIMITER = ".";
+
+    private static final int FIRST_CHARACTER = 0;
+    private static final int SECOND_CHARACTER = 1;
+
+    private static final int PREFIX = 0;
+    private static final int LOCAL_NAME = 1;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Set<String> importedPackageNames = initPackageNames();
 
-    private final HashMap<String, Component> nameToComponent = new HashMap<>();
+    private final Map<Component, Map<String, Map<String, String>>> elementAttributes = new HashMap<>();
+
+    private final Map<Component, List<Component>> parentToComponents = new HashMap<>();
+
+    private final Map<String, Component> nameToComponent = new HashMap<>();
 
     private Stack<Component> elements = new Stack<>();
 
-    private List<Runnable> futures = new ArrayList<>();
-
-    <T> T getRootElement() {
-        return (T) elements.pop();
-    }
-
-    public <T> T getComponent(String name) {
-        return (T) nameToComponent.get(name);
-    }
+    private Container parent;
 
     ComponentHandler() {
         TypeConverter.registerConverter(this);
     }
 
-    @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Component.class.getName(), Component.class.getSimpleName(), "component");
+    <T> T getRoot() {
+        return cast(parent);
     }
 
-    @Override
-    public Object convert(String value) {
-        return getComponent(value);
+    <T extends Component> T getComponent(String name) {
+        return cast(nameToComponent.get(name));
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         try {
-            Class<?> qClass = getClass(qName);
-            Component element = (Component) qClass.newInstance();
-            buildElement(element, attributes);
-
-            String name = element.getName();
-            if (Objects.nonNull(name) && !name.isEmpty()) {
-                nameToComponent.put(name, element);
-            }
+            Class<Component> qClass = getClass(qName);
+            Component element = qClass.newInstance();
+            elementAttributes.put(element, getAttributesByPrefix(attributes));
 
             elements.add(element);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -77,52 +91,100 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
             return;
         }
 
-        Object element = elements.pop();
-        Object parent = elements.peek();
+        Component element = elements.pop();
+        Container parent = (Container) elements.peek();
 
-        try {
-            // TODO
-            Method method = getMethod("add", parent.getClass(), element.getClass());
-            method.invoke(parent, element);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new SAXException(e.getMessage());
-        }
+        parentToComponents.computeIfAbsent(parent, key -> new ArrayList<>()).add(element);
     }
 
     @Override
     public void endDocument() throws SAXException {
         super.endDocument();
 
-        futures.forEach(Runnable::run);
-    }
-
-    private void buildElement(Component element, Attributes attributes) {
-        for (int i = 0; i < attributes.getLength(); i++) {
-            String methodName = attributes.getLocalName(i);
-            String[] arguments = attributes.getValue(i).split(VALUE_DELIMITER);
-
-            List<Method> methods = getCandidateMethods(element, methodName, arguments.length);
-            if (!methods.isEmpty()) {
-                invokeMethod(element, methods, arguments);
-                continue;
-            }
-
-            futures.add(() -> invokeParentMethod(element, methodName, arguments));
+        try {
+            parent = (Container) elements.pop();
+            buildComponent(parent);
+            parentToComponents.getOrDefault(parent, Collections.emptyList()).forEach(c -> buildLayout(parent, c));
+        } catch (IllegalArgumentException e) {
+            throw new SAXException(e.getMessage());
+        } finally {
+            TypeConverter.unregisterConverter(this);
         }
     }
 
-    private void invokeParentMethod(Component element, String methodName, String[] arguments) {
-        Component parent = element.getParent();
-        List<Method> methods = getCandidateMethods(parent, methodName, arguments.length + 1);
-        invokeMethod(parent, methods, Stream.concat(Stream.of(element.getName()), Stream.of(arguments)).toArray(String[]::new));
+    @Override
+    public List<String> getHandledTypes() {
+        return Arrays.asList(Component.class.getName(), Component.class.getSimpleName(), "component");
+    }
+
+    @Override
+    public Object convert(String value) {
+        return getComponent(value);
+    }
+
+    private Map<String, Map<String, String>> getAttributesByPrefix(Attributes attributes) {
+        Map<String, Map<String, String>> attributesByPrefix = new HashMap<>();
+        for (int i = 0; i < attributes.getLength(); i++) {
+            String qName = attributes.getQName(i);
+            if (!qName.contains(Q_NAME_DELIMITER)) {
+                qName = Q_NAME_DELIMITER + qName;
+            }
+
+            String[] parts = qName.split(Q_NAME_DELIMITER);
+            attributesByPrefix.computeIfAbsent(parts[PREFIX], key -> new HashMap<>()).put(parts[LOCAL_NAME], attributes.getValue(i));
+        }
+
+        return attributesByPrefix;
+    }
+
+    private void buildComponent(Component component) {
+        Map<String, Map<String, String>> attributesByPrefix = elementAttributes.getOrDefault(component, Collections.emptyMap());
+
+        for (Map.Entry<String, String> entry: attributesByPrefix.getOrDefault(EMPTY_PREFIX, Collections.emptyMap()).entrySet()) {
+            String methodName = getMethodName(entry.getKey());
+            String[] arguments = entry.getValue().split(VALUE_DELIMITER);
+
+            List<Method> methods = getCandidateMethods(component, methodName, arguments.length);
+            if (!methods.isEmpty()) {
+                invokeMethod(component, methods, arguments);
+                continue;
+            }
+
+            throw new IllegalArgumentException(String.format("Method [%s] not found.", methodName));
+        }
+
+        String name = component.getName();
+        if (Objects.nonNull(name)) {
+            nameToComponent.put(name, component);
+        }
+
+        parentToComponents.getOrDefault(component, Collections.emptyList()).forEach(this::buildComponent);
+    }
+
+    private void buildLayout(Component parent, Component component) {
+        if (!Container.class.isInstance(parent)) {
+            throw new IllegalArgumentException(String.format("[%s] is not a valid container.", parent));
+        }
+
+        Container container = (Container) parent;
+        String layout = container.getLayout().getClass().getName();
+
+        Object constraints = getConstraints(layout, component);
+        container.add(component, constraints);
+
+        parentToComponents.getOrDefault(component, Collections.emptyList()).forEach(c -> buildLayout(component, c));
+    }
+
+    private Object getConstraints(String layout, Component component) {
+        Map<String, Map<String, String>> attributesByPrefix = elementAttributes.getOrDefault(component, Collections.emptyMap());
+        return ConstraintsConverter.convert(layout, attributesByPrefix.getOrDefault(LAYOUT_PREFIX, Collections.emptyMap()));
     }
 
     private List<Method> getCandidateMethods(Component element, String methodName, int argumentsCount) {
-        List<String> methodNames = Arrays.asList(methodName, "set" + capitalize(methodName));
         List<Class<?>> returnTypes = Arrays.asList(void.class, boolean.class, Boolean.class);
 
         return Stream.of(element.getClass().getMethods())
-                .filter(method -> methodNames.contains(method.getName()))
+                .filter(method -> methodName.equals(method.getName()))
                 .filter(method -> method.getParameterCount() == argumentsCount)
                 .filter(method -> returnTypes.contains(method.getReturnType()))
                 .collect(Collectors.toList());
@@ -135,7 +197,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
                 logger.info("Invoked method [{}] on [{}] with parameters {}.", method.getName(), element.getName(), Arrays.toString(arguments));
                 return;
             } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                logger.debug("Cannot invoke method [{}] on [{}] with parameters {} because", method.getName(), element.getName(), Arrays.toString(arguments), e);
+                logger.debug("Cannot invoke method [{}] on [{}] with parameters {} because {}", method.getName(), element.getName(), Arrays.toString(arguments), e);
             }
         }
     }
@@ -149,38 +211,28 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
         return convertedValues;
     }
 
-    private String capitalize(String attributeLocalName) {
-        return attributeLocalName.substring(0, 1).toUpperCase() + attributeLocalName.substring(1);
+    private String getMethodName(String name) {
+        return SETTER_PREFIX + name.substring(FIRST_CHARACTER, SECOND_CHARACTER).toUpperCase() + name.substring(SECOND_CHARACTER);
     }
 
-    private Class<?> getClass(String className) throws ClassNotFoundException {
+    private Class<Component> getClass(String className) throws ClassNotFoundException {
         for (String packageName: importedPackageNames) {
             try {
-                return Class.forName(packageName + className);
+                return cast(Class.forName(packageName + className));
             } catch (ClassNotFoundException e) {
                 // nothing to do
             }
         }
 
-        throw new IllegalStateException("Cannot load class named " + className);
-    }
-
-    private Method getMethod(String methodName, Class<?> parentClass, Class<?> elementClass) throws NoSuchMethodException {
-        List<String> errorMessages = new ArrayList<>();
-        while (Objects.nonNull(elementClass)) {
-            try {
-                return parentClass.getMethod(methodName, elementClass);
-            } catch (NoSuchMethodException e) {
-                errorMessages.add(e.getMessage());
-                elementClass = elementClass.getSuperclass();
-            }
-        }
-
-        throw new NoSuchMethodException(String.join(", ", errorMessages));
+        throw new IllegalStateException(String.format("Cannot load class [%s].", className));
     }
 
     void registerPackageName(String... packageNames) {
-        importedPackageNames.addAll(Arrays.asList(packageNames));
+        Set<String> packages = Stream.of(packageNames)
+                .map(packageName -> packageName.endsWith(PACKAGE_DELIMITER)? packageName: packageName + PACKAGE_DELIMITER)
+                .collect(Collectors.toSet());
+
+        importedPackageNames.addAll(packages);
     }
 
     private Set<String> initPackageNames() {

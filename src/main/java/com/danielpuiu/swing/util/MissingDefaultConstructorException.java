@@ -1,8 +1,8 @@
-package com.danielpuiu.swing.type;
+package com.danielpuiu.swing.util;
 
 public class MissingDefaultConstructorException extends RuntimeException {
 
-    MissingDefaultConstructorException(String className) {
+    public MissingDefaultConstructorException(String className) {
         super(className);
     }
 }

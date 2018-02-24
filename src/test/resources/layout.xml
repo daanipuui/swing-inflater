@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<com.danielpuiu.swing.component.RelativeContainer margins="20, 20, 20, 20" padding="10, 10, 10, 10">
+<JPanel layout="com.danielpuiu.swing.layout.RelativeLayout">
 
     <JLabel
         name="#1"
@@ -9,25 +9,25 @@
     <JTextField
         name="#2"
         background="0xFF0000"
-        rightOf="#1"
-        centerVertical="#1"
-        alignParentRight="true"/>
+        layout:rightOf="#1"
+        layout:centerVertical="#1"
+        layout:alignParentRight="true"/>
 
     <JLabel
         name="#3"
         background="0xFF00FF"
-        width=".5"
         text="Market name"
-        below="#1"
-        centerVerticalInParent="true"/>
+        layout:width=".5"
+        layout:below="#1"
+        layout:centerVerticalInParent="true"/>
 
     <JTextField
         name="#4"
         background="0x00FF00"
-        rightOf="#3"
-        alignTop="#3"
-        alignLeft="#2"
-        alignParentRight="true"
-        alignParentBottom="true"/>
+        layout:rightOf="#3"
+        layout:alignTop="#3"
+        layout:alignLeft="#2"
+        layout:alignParentRight="true"
+        layout:alignParentBottom="true"/>
 
-</com.danielpuiu.swing.component.RelativeContainer>
+</JPanel>

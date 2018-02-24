@@ -1,8 +1,8 @@
 package com.danielpuiu.swing.layout;
 
-import java.awt.*;
+import java.awt.Component;
 
-public class Bounds {
+class Bounds {
 
     int x;
     int y;
@@ -11,13 +11,6 @@ public class Bounds {
     int height;
 
     Bounds() {
-    }
-
-    Bounds(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
     }
 
     Bounds(Component component) {
@@ -29,11 +22,6 @@ public class Bounds {
 
     @Override
     public String toString() {
-        return "Bounds{" +
-                "x=" + x +
-                ", y=" + y +
-                ", width=" + width +
-                ", height=" + height +
-                '}';
+        return String.format("%s{x=[%d], y=[%d], width=[%d], height=[%d]}", getClass().getSimpleName(), x, y, width, height);
     }
 }

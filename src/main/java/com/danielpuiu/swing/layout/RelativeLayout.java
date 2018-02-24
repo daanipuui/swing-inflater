@@ -1,11 +1,23 @@
 package com.danielpuiu.swing.layout;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager2;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.danielpuiu.swing.util.ObjectUtil.cast;
 
 public class RelativeLayout implements LayoutManager2 {
 
@@ -40,6 +52,73 @@ public class RelativeLayout implements LayoutManager2 {
 
     @Override
     public void addLayoutComponent(Component component, Object constraints) {
+        if (!Map.class.isInstance(constraints)) {
+            throw new IllegalArgumentException("Unknown constraint type");
+        }
+
+        Map<String, Object> mapConstraints = cast(constraints);
+        for (Map.Entry<String, Object> entry: mapConstraints.entrySet()) {
+            Object value = entry.getValue();
+
+            switch (entry.getKey()) {
+                case "above":
+                    above(component, (Component) value);
+                    break;
+                case "alignBottom":
+                    alignBottom(component, (Component) value);
+                    break;
+                case "alignParentBottom":
+                    alignBottom(component, component.getParent());
+                    break;
+                case "alignLeft":
+                    alignLeft(component, (Component) value);
+                    break;
+                case "alignParentLeft":
+                    alignLeft(component, component.getParent());
+                    break;
+                case "alignRight":
+                    alignRight(component, (Component) value);
+                    break;
+                case "alignParentRight":
+                    alignRight(component, component.getParent());
+                    break;
+                case "alignTop":
+                    alignTop(component, (Component) value);
+                    break;
+                case "alignParentTop":
+                    alignTop(component, component.getParent());
+                    break;
+                case "below":
+                    below(component, (Component) value);
+                    break;
+                case "centerHorizontal":
+                    centerHorizontal(component, (Component) value);
+                    break;
+                case "centerHorizontalInParent":
+                    centerHorizontal(component, component.getParent());
+                    break;
+                case "centerVertical":
+                    centerVertical(component, (Component) value);
+                    break;
+                case "centerVerticalInParent":
+                    centerVertical(component, component.getParent());
+                    break;
+                case "leftOf":
+                    leftOf(component, (Component) value);
+                    break;
+                case "rightOf":
+                    rightOf(component, (Component) value);
+                    break;
+                case "width":
+                    width(component, (Double) value);
+                    break;
+                case "height":
+                    height(component, (Double) value);
+                    break;
+                default:
+                    throw new IllegalArgumentException(String.format("Unknown attribute [%s].", entry.getKey()));
+            }
+        }
     }
 
     @Override
@@ -157,7 +236,7 @@ public class RelativeLayout implements LayoutManager2 {
         alignToRight(parent);
 
         centerOnComponentHorizontally(parent, new Bounds(parent));
-        centerHorizontal(leftMostComponents);
+        centerHorizontally(leftMostComponents);
     }
 
     private void layoutTopToBottom(Container parent, Set<Component> components) {
@@ -168,7 +247,7 @@ public class RelativeLayout implements LayoutManager2 {
         alignToBottom(parent);
 
         centerOnComponentVertically(parent, new Bounds(parent));
-        centerVertical(topMostComponents);
+        centerVertically(topMostComponents);
     }
 
     private int getParentWidth(Container parent) {
@@ -313,14 +392,14 @@ public class RelativeLayout implements LayoutManager2 {
         }
     }
 
-    private void centerHorizontal(Set<Component> components) {
+    private void centerHorizontally(Set<Component> components) {
         if (isEmpty(components)) {
             return;
         }
 
         for (Component reference: components) {
             centerOnComponentHorizontally(reference, componentToBounds.get(reference));
-            centerHorizontal(leftToRight.get(reference));
+            centerHorizontally(leftToRight.get(reference));
         }
     }
 
@@ -333,14 +412,14 @@ public class RelativeLayout implements LayoutManager2 {
         }
     }
 
-    private void centerVertical(Set<Component> components) {
+    private void centerVertically(Set<Component> components) {
         if (isEmpty(components)) {
             return;
         }
 
         for (Component reference: components) {
             centerOnComponentVertically(reference, componentToBounds.get(reference));
-            centerVertical(topToBottom.get(reference));
+            centerVertically(topToBottom.get(reference));
         }
     }
 
@@ -368,11 +447,11 @@ public class RelativeLayout implements LayoutManager2 {
         }
     }
 
-    public void setMargins(int top, int left, int bottom, int right) {
+    public void margins(int top, int left, int bottom, int right) {
         margins = new Insets(top, left, bottom, right);
     }
 
-    public void setPadding(int top, int left, int bottom, int right) {
+    public void padding(int top, int left, int bottom, int right) {
         padding = new Insets(top, left, bottom, right);
     }
 

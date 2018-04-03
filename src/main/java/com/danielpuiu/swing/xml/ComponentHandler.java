@@ -108,6 +108,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
             buildComponent(parent);
             buildLayout(parent);
         } catch (IllegalArgumentException e) {
+            logger.debug("Error parsing xml file", e);
             throw new SAXException(e.getMessage());
         } finally {
             TypeConverter.unregisterConverter(this);

@@ -2,7 +2,7 @@
 <JPanel
     layout="com.danielpuiu.swing.layout.RelativeLayout"
     layout:margins="10,10,10,10"
-    layout:padding="20,20,20,20">
+    layout:padding="10,10,10,10">
 
     <JLabel
         name="#1"

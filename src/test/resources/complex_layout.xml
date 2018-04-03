@@ -1,61 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<com.danielpuiu.swing.component.RelativeContainer
-    margins="5, 5, 5, 5">
+<JPanel
+    layout="com.danielpuiu.swing.layout.RelativeLayout"
+    layout:margins="5,5,5,5">
 
-    <com.danielpuiu.swing.component.RelativeContainer
+    <JPanel
         name="#1"
-        margins="5, 5, 5, 5"
-        width="0.2"
-        height="0.5">
+        layout:width="0.2"
+        layout:height="0.5">
 
         <JPanel
-            width="1"
-            height="1"
             background="#FFFF00"/>
 
-    </com.danielpuiu.swing.component.RelativeContainer>
+    </JPanel>
 
-    <com.danielpuiu.swing.component.RelativeContainer
+    <JPanel
         name="#2"
-        margins="5, 5, 5, 5"
-        width="0.8"
-        height="0.5"
-        rightOf="#1">
+        layout:width="0.8"
+        layout:height="0.5"
+        layout:rightOf="#1">
 
         <JPanel
-            width="1"
-            height="1"
             background="#FF00FF"/>
 
-    </com.danielpuiu.swing.component.RelativeContainer>
+    </JPanel>
 
-    <com.danielpuiu.swing.component.RelativeContainer
+    <JPanel
         name="#3"
-        margins="5, 5, 5, 5"
-        width="0.2"
-        height="0.5"
-        below="#1">
+        layout:width="0.2"
+        layout:height="0.5"
+        layout:below="#1">
 
         <JPanel
-            width="1"
-            height="1"
             background="#00FFFF"/>
 
-    </com.danielpuiu.swing.component.RelativeContainer>
+    </JPanel>
 
-    <com.danielpuiu.swing.component.RelativeContainer
+    <JPanel
         name="#4"
-        margins="5, 5, 5, 5"
-        width="0.8"
-        height="0.5"
-        rightOf="#3"
-        alignTop="#3">
+        layout:width="0.8"
+        layout:height="0.5"
+        layout:rightOf="#3"
+        layout:alignTop="#3">
 
         <JPanel
-            width="1"
-            height="1"
             background="#00FF00"/>
 
-    </com.danielpuiu.swing.component.RelativeContainer>
+    </JPanel>
 
-</com.danielpuiu.swing.component.RelativeContainer>
+</JPanel>

@@ -4,7 +4,6 @@ import com.danielpuiu.swing.constraints.ConstraintsConversion;
 import com.danielpuiu.swing.layout.RelativeLayout;
 import com.danielpuiu.swing.type.TypeConverter;
 
-import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,24 +40,24 @@ public class RelativeLayoutConstraints implements ConstraintsConversion {
     private static Map<String, String> init() {
         Map<String, String> map = new HashMap<>();
 
-        map.put("above", Component.class.getSimpleName());
-        map.put("alignBottom", Component.class.getSimpleName());
-        map.put("alignLeft", Component.class.getSimpleName());
-        map.put("alignParentBottom", Boolean.class.getSimpleName());
-        map.put("alignParentLeft", Boolean.class.getSimpleName());
-        map.put("alignParentRight", Boolean.class.getSimpleName());
-        map.put("alignParentTop", Boolean.class.getSimpleName());
-        map.put("alignRight", Component.class.getSimpleName());
-        map.put("alignTop", Component.class.getSimpleName());
-        map.put("below", Component.class.getSimpleName());
-        map.put("centerHorizontal", Component.class.getSimpleName());
-        map.put("centerHorizontalInParent", Boolean.class.getSimpleName());
-        map.put("centerVertical", Component.class.getSimpleName());
-        map.put("centerVerticalInParent", Boolean.class.getSimpleName());
-        map.put("leftOf", Component.class.getSimpleName());
-        map.put("rightOf", Component.class.getSimpleName());
-        map.put("width", Double.class.getSimpleName());
-        map.put("height", Double.class.getSimpleName());
+        map.put("above", "Component");
+        map.put("alignBottom", "Component");
+        map.put("alignLeft", "Component");
+        map.put("alignParentBottom", "Boolean");
+        map.put("alignParentLeft", "Boolean");
+        map.put("alignParentRight", "Boolean");
+        map.put("alignParentTop", "Boolean");
+        map.put("alignRight", "Component");
+        map.put("alignTop", "Component");
+        map.put("below", "Component");
+        map.put("centerHorizontal", "Component");
+        map.put("centerHorizontalInParent", "Boolean");
+        map.put("centerVertical", "Component");
+        map.put("centerVerticalInParent", "Boolean");
+        map.put("leftOf", "Component");
+        map.put("rightOf", "Component");
+        map.put("width", "Double");
+        map.put("height", "Double");
 
         return Collections.unmodifiableMap(map);
     }

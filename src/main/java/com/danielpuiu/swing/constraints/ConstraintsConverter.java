@@ -1,9 +1,11 @@
 package com.danielpuiu.swing.constraints;
 
+import com.danielpuiu.swing.constraints.conversion.BorderLayoutConstraints;
 import com.danielpuiu.swing.constraints.conversion.FlowLayoutConstraints;
 import com.danielpuiu.swing.constraints.conversion.RelativeLayoutConstraints;
 import com.danielpuiu.swing.util.MissingDefaultConstructorException;
 
+import java.awt.BorderLayout;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +17,8 @@ public class ConstraintsConverter {
     static {
         Arrays.asList(
             RelativeLayoutConstraints.class,
-                FlowLayoutConstraints.class
+            FlowLayoutConstraints.class,
+            BorderLayoutConstraints.class
         ).forEach(ConstraintsConverter::registerConverter);
     }
 

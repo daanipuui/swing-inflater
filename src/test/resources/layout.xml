@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <JPanel
     layout="com.danielpuiu.swing.layout.RelativeLayout"
-    layout:margins="10,10,10,10"
-    layout:padding="10,10,10,10">
+    layout_attribute:margins="10,10,10,10"
+    layout_attribute:padding="10,10,10,10">
 
     <JLabel
         name="#1"
@@ -12,25 +12,25 @@
     <JTextField
         name="#2"
         background="0xFF0000"
-        layout:rightOf="#1"
-        layout:centerVertical="#1"
-        layout:alignParentRight="true"/>
+        layout_constraint:rightOf="#1"
+        layout_constraint:centerVertical="#1"
+        layout_constraint:alignParentRight="true"/>
 
     <JLabel
         name="#3"
         background="0xFF00FF"
         text="Market name"
-        layout:width=".5"
-        layout:below="#1"
-        layout:centerVerticalInParent="true"/>
+        layout_constraint:width=".5"
+        layout_constraint:below="#1"
+        layout_constraint:centerVerticalInParent="true"/>
 
     <JTextField
         name="#4"
         background="0x00FF00"
-        layout:rightOf="#3"
-        layout:alignTop="#3"
-        layout:alignLeft="#2"
-        layout:alignParentRight="true"
-        layout:alignParentBottom="true"/>
+        layout_constraint:rightOf="#3"
+        layout_constraint:alignTop="#3"
+        layout_constraint:alignLeft="#2"
+        layout_constraint:alignParentRight="true"
+        layout_constraint:alignParentBottom="true"/>
 
 </JPanel>

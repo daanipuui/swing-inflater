@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -37,7 +36,8 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
     private static final String VALUE_DELIMITER = ",";
 
     private static final String EMPTY_PREFIX = "";
-    private static final String LAYOUT_PREFIX = "layout";
+    private static final String LAYOUT_ATTRIBUTE_PREFIX = "layout_attribute";
+    private static final String LAYOUT_CONSTRAINT_PREFIX = "layout_constraint";
 
     private static final String SETTER_PREFIX = "set";
     private static final String PACKAGE_DELIMITER = ".";
@@ -179,7 +179,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
         LayoutManager layout = container.getLayout();
         if (Objects.nonNull(layout)) {
             Map<String, Map<String, String>> attributesByPrefix = elementAttributes.getOrDefault(container, Collections.emptyMap());
-            callMethods(layout, attributesByPrefix.getOrDefault(LAYOUT_PREFIX, Collections.emptyMap()));
+            callMethods(layout, attributesByPrefix.getOrDefault(LAYOUT_ATTRIBUTE_PREFIX, Collections.emptyMap()));
         }
     }
 
@@ -197,8 +197,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
 
     private Object getConstraints(String layout, Component component) {
         Map<String, Map<String, String>> attributesByPrefix = elementAttributes.getOrDefault(component, Collections.emptyMap());
-        Map<String, String> layoutAttributes = attributesByPrefix.remove(LAYOUT_PREFIX);
-        return ConstraintsConverter.convert(layout, Optional.ofNullable(layoutAttributes).orElse(Collections.emptyMap()));
+        return ConstraintsConverter.convert(layout, attributesByPrefix.getOrDefault(LAYOUT_CONSTRAINT_PREFIX, Collections.emptyMap()));
     }
 
     private List<Method> getCandidateMethods(Object object, String methodName, int argumentsCount) {

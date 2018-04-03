@@ -1,5 +1,6 @@
 package com.danielpuiu.swing.constraints;
 
+import com.danielpuiu.swing.constraints.conversion.FlowLayoutConstraints;
 import com.danielpuiu.swing.constraints.conversion.RelativeLayoutConstraints;
 import com.danielpuiu.swing.util.MissingDefaultConstructorException;
 
@@ -13,7 +14,8 @@ public class ConstraintsConverter {
 
     static {
         Arrays.asList(
-            RelativeLayoutConstraints.class
+            RelativeLayoutConstraints.class,
+                FlowLayoutConstraints.class
         ).forEach(ConstraintsConverter::registerConverter);
     }
 

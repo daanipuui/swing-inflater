@@ -1,48 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <JPanel
     layout="com.danielpuiu.swing.layout.RelativeLayout"
-    layout:margins="5,5,5,5">
+    layout_attribute:margins="5,5,5,5">
 
     <JPanel
         name="#1"
-        layout:width="0.2"
-        layout:height="0.5">
+        layout="com.danielpuiu.swing.layout.RelativeLayout"
+        layout_attribute:margins="5,5,5,5"
+        layout_constraint:width="0.2"
+        layout_constraint:height="0.5">
 
         <JPanel
+            layout_constraint:width="1"
+            layout_constraint:height="1"
             background="#FFFF00"/>
 
     </JPanel>
 
     <JPanel
         name="#2"
-        layout:width="0.8"
-        layout:height="0.5"
-        layout:rightOf="#1">
+        layout="com.danielpuiu.swing.layout.RelativeLayout"
+        layout_attribute:margins="5,5,5,5"
+        layout_constraint:width="0.8"
+        layout_constraint:height="0.5"
+        layout_constraint:rightOf="#1">
 
         <JPanel
+            layout_constraint:width="1"
+            layout_constraint:height="1"
             background="#FF00FF"/>
 
     </JPanel>
 
     <JPanel
         name="#3"
-        layout:width="0.2"
-        layout:height="0.5"
-        layout:below="#1">
+        layout="com.danielpuiu.swing.layout.RelativeLayout"
+        layout_attribute:margins="5,5,5,5"
+        layout_constraint:width="0.2"
+        layout_constraint:height="0.5"
+        layout_constraint:below="#1">
 
         <JPanel
+            layout_constraint:width="1"
+            layout_constraint:height="1"
             background="#00FFFF"/>
 
     </JPanel>
 
     <JPanel
         name="#4"
-        layout:width="0.8"
-        layout:height="0.5"
-        layout:rightOf="#3"
-        layout:alignTop="#3">
+        layout="com.danielpuiu.swing.layout.RelativeLayout"
+        layout_attribute:margins="5,5,5,5"
+        layout_constraint:width="0.8"
+        layout_constraint:height="0.5"
+        layout_constraint:rightOf="#3"
+        layout_constraint:alignTop="#3">
 
         <JPanel
+            layout_constraint:width="1"
+            layout_constraint:height="1"
             background="#00FF00"/>
 
     </JPanel>

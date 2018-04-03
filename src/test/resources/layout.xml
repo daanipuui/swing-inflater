@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<JPanel layout="com.danielpuiu.swing.layout.RelativeLayout">
+<JPanel
+    layout="com.danielpuiu.swing.layout.RelativeLayout"
+    layout:margins="10,10,10,10"
+    layout:padding="20,20,20,20">
 
     <JLabel
         name="#1"

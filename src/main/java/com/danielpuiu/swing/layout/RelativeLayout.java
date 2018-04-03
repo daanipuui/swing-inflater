@@ -447,11 +447,11 @@ public class RelativeLayout implements LayoutManager2 {
         }
     }
 
-    public void margins(int top, int left, int bottom, int right) {
+    public void setMargins(int top, int left, int bottom, int right) {
         margins = new Insets(top, left, bottom, right);
     }
 
-    public void padding(int top, int left, int bottom, int right) {
+    public void setPadding(int top, int left, int bottom, int right) {
         padding = new Insets(top, left, bottom, right);
     }
 

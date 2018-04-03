@@ -11,6 +11,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.LayoutManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -22,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -80,13 +82,13 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
             elementAttributes.put(element, getAttributesByPrefix(attributes));
 
             elements.add(element);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new SAXException(e.getMessage());
         }
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         if (elements.size() == 1) {
             return;
         }
@@ -104,7 +106,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
         try {
             parent = (Container) elements.pop();
             buildComponent(parent);
-            parentToComponents.getOrDefault(parent, Collections.emptyList()).forEach(c -> buildLayout(parent, c));
+            buildLayout(parent);
         } catch (IllegalArgumentException e) {
             throw new SAXException(e.getMessage());
         } finally {
@@ -139,65 +141,83 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
 
     private void buildComponent(Component component) {
         Map<String, Map<String, String>> attributesByPrefix = elementAttributes.getOrDefault(component, Collections.emptyMap());
+        callMethods(component, attributesByPrefix.getOrDefault(EMPTY_PREFIX, Collections.emptyMap()));
 
-        for (Map.Entry<String, String> entry: attributesByPrefix.getOrDefault(EMPTY_PREFIX, Collections.emptyMap()).entrySet()) {
+        registerComponentName(component);
+        parentToComponents.getOrDefault(component, Collections.emptyList()).forEach(this::buildComponent);
+    }
+
+    private void registerComponentName(Component component) {
+        String name = component.getName();
+        if (Objects.nonNull(name)) {
+            nameToComponent.put(name, component);
+        }
+    }
+
+    private void callMethods(Object object, Map<String, String> attributes) {
+        for (Map.Entry<String, String> entry: attributes.entrySet()) {
             String methodName = getMethodName(entry.getKey());
             String[] arguments = entry.getValue().split(VALUE_DELIMITER);
 
-            List<Method> methods = getCandidateMethods(component, methodName, arguments.length);
+            List<Method> methods = getCandidateMethods(object, methodName, arguments.length);
             if (!methods.isEmpty()) {
-                invokeMethod(component, methods, arguments);
+                invokeMethod(object, methods, arguments);
                 continue;
             }
 
             throw new IllegalArgumentException(String.format("Method [%s] not found.", methodName));
         }
-
-        String name = component.getName();
-        if (Objects.nonNull(name)) {
-            nameToComponent.put(name, component);
-        }
-
-        parentToComponents.getOrDefault(component, Collections.emptyList()).forEach(this::buildComponent);
     }
 
-    private void buildLayout(Component parent, Component component) {
-        if (!Container.class.isInstance(parent)) {
-            throw new IllegalArgumentException(String.format("[%s] is not a valid container.", parent));
+    private void buildLayout(Container container) {
+        parentToComponents.getOrDefault(container, Collections.emptyList())
+                .stream()
+                .filter(Container.class::isInstance)
+                .forEach(child -> addComponentToLayout(container, child));
+
+        LayoutManager layout = container.getLayout();
+        if (Objects.nonNull(layout)) {
+            Map<String, Map<String, String>> attributesByPrefix = elementAttributes.getOrDefault(container, Collections.emptyMap());
+            callMethods(layout, attributesByPrefix.getOrDefault(LAYOUT_PREFIX, Collections.emptyMap()));
+        }
+    }
+
+    private void addComponentToLayout(Container parent, Component component) {
+        LayoutManager layout = parent.getLayout();
+        if (Objects.nonNull(layout)) {
+            Object constraints = getConstraints(layout.getClass().getName(), component);
+            parent.add(component, constraints);
         }
 
-        Container container = (Container) parent;
-        String layout = container.getLayout().getClass().getName();
-
-        Object constraints = getConstraints(layout, component);
-        container.add(component, constraints);
-
-        parentToComponents.getOrDefault(component, Collections.emptyList()).forEach(c -> buildLayout(component, c));
+        if (component instanceof Container) {
+            buildLayout((Container) component);
+        }
     }
 
     private Object getConstraints(String layout, Component component) {
         Map<String, Map<String, String>> attributesByPrefix = elementAttributes.getOrDefault(component, Collections.emptyMap());
-        return ConstraintsConverter.convert(layout, attributesByPrefix.getOrDefault(LAYOUT_PREFIX, Collections.emptyMap()));
+        Map<String, String> layoutAttributes = attributesByPrefix.remove(LAYOUT_PREFIX);
+        return ConstraintsConverter.convert(layout, Optional.ofNullable(layoutAttributes).orElse(Collections.emptyMap()));
     }
 
-    private List<Method> getCandidateMethods(Component element, String methodName, int argumentsCount) {
+    private List<Method> getCandidateMethods(Object object, String methodName, int argumentsCount) {
         List<Class<?>> returnTypes = Arrays.asList(void.class, boolean.class, Boolean.class);
 
-        return Stream.of(element.getClass().getMethods())
+        return Stream.of(object.getClass().getMethods())
                 .filter(method -> methodName.equals(method.getName()))
                 .filter(method -> method.getParameterCount() == argumentsCount)
                 .filter(method -> returnTypes.contains(method.getReturnType()))
                 .collect(Collectors.toList());
     }
 
-    private void invokeMethod(Component element, List<Method> candidateMethods, String[] arguments) {
+    private void invokeMethod(Object object, List<Method> candidateMethods, String[] arguments) {
         for (Method method: candidateMethods) {
             try {
-                method.invoke(element, getArguments(method.getGenericParameterTypes(), arguments));
-                logger.info("Invoked method [{}] on [{}] with parameters {}.", method.getName(), element.getName(), Arrays.toString(arguments));
+                method.invoke(object, getArguments(method.getGenericParameterTypes(), arguments));
+                logger.info("Invoked method [{}] on [{}] with parameters {}.", method.getName(), object, Arrays.toString(arguments));
                 return;
             } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                logger.debug("Cannot invoke method [{}] on [{}] with parameters {} because {}", method.getName(), element.getName(), Arrays.toString(arguments), e);
+                logger.debug("Cannot invoke method [{}] on [{}] with parameters {} because {}", method.getName(), object, Arrays.toString(arguments), e);
             }
         }
     }
@@ -215,7 +235,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
         return SETTER_PREFIX + name.substring(FIRST_CHARACTER, SECOND_CHARACTER).toUpperCase() + name.substring(SECOND_CHARACTER);
     }
 
-    private Class<Component> getClass(String className) throws ClassNotFoundException {
+    private Class<Component> getClass(String className) {
         for (String packageName: importedPackageNames) {
             try {
                 return cast(Class.forName(packageName + className));

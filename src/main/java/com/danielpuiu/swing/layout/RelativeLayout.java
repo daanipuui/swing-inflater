@@ -143,7 +143,7 @@ public class RelativeLayout implements LayoutManager2 {
 
     @Override
     public Dimension maximumLayoutSize(Container parent) {
-        componentDimension = Component::getMinimumSize;
+        componentDimension = Component::getMaximumSize;
         return getLayoutSize(parent);
     }
 

@@ -27,10 +27,17 @@
     <JTextField
         name="#4"
         background="0x00FF00"
+        layout_constraint:width=".2"
         layout_constraint:rightOf="#3"
         layout_constraint:alignTop="#3"
         layout_constraint:alignLeft="#2"
-        layout_constraint:alignParentRight="true"
+        layout_constraint:alignParentBottom="true"/>
+
+    <JButton
+        name="#5"
+        text="click me"
+        layout_constraint:width=".3"
+        layout_constraint:rightOf="#4"
         layout_constraint:alignParentBottom="true"/>
 
 </JPanel>

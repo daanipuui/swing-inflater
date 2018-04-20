@@ -123,10 +123,12 @@ public class RelativeLayout implements LayoutManager2 {
 
     @Override
     public void addLayoutComponent(String name, Component component) {
+        // unimplemented
     }
 
     @Override
     public void removeLayoutComponent(Component component) {
+        // unimplemented
     }
 
     @Override

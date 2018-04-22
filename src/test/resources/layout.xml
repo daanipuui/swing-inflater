@@ -36,8 +36,8 @@
     <JButton
         name="#5"
         text="click me"
-        layout_constraint:width=".3"
         layout_constraint:rightOf="#4"
+        layout_constraint:below="#2"
         layout_constraint:alignParentBottom="true"/>
 
 </JPanel>

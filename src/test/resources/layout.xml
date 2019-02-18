@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <JPanel
-    layout="com.danielpuiu.swing.layout.RelativeLayout"
+    layout="com.danielpuiu.swing.inflater.layout.RelativeLayout"
     layout_attribute:margins="10,10,10,10"
     layout_attribute:padding="10,10,10,10">
 

@@ -52,12 +52,7 @@ public class RelativeLayout implements LayoutManager2 {
 
     @Override
     public void addLayoutComponent(Component component, Object constraints) {
-        if (!Map.class.isInstance(constraints)) {
-            throw new IllegalArgumentException("Unknown constraint type");
-        }
-
-        Map<String, Object> mapConstraints = cast(constraints);
-        for (Map.Entry<String, Object> entry : mapConstraints.entrySet()) {
+        for (Map.Entry<String, Object> entry : getConstraintsMap(constraints).entrySet()) {
             Object value = entry.getValue();
 
             switch (entry.getKey()) {
@@ -138,6 +133,21 @@ public class RelativeLayout implements LayoutManager2 {
                     throw new IllegalArgumentException(String.format("Unknown attribute [%s].", entry.getKey()));
             }
         }
+    }
+
+    private Map<String, Object> getConstraintsMap(Object constraints) {
+        if (Objects.isNull(constraints)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("alignParentLeft", true);
+            map.put("alignParentTop", true);
+            return map;
+        }
+
+        if (!(constraints instanceof Map)) {
+            throw new IllegalArgumentException("Unknown constraint type");
+        }
+
+        return cast(constraints);
     }
 
     @Override

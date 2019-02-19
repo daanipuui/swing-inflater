@@ -5,14 +5,12 @@ import com.danielpuiu.swing.inflater.constraints.ConstraintsConversion;
 import com.danielpuiu.swing.inflater.layout.RelativeLayout;
 import com.danielpuiu.swing.inflater.type.TypeConverter;
 
-import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class RelativeLayoutConstraints implements ConstraintsConversion {
 
@@ -21,28 +19,6 @@ public class RelativeLayoutConstraints implements ConstraintsConversion {
     private static final String DOUBLE = "Double";
 
     private static final Map<String, String> attributeToTypeNames = init();
-
-    private static final ContextProvider CONTEXT_PROVIDER = new ContextProvider() {
-        @Override
-        public void register(String... packageNames) {
-
-        }
-
-        @Override
-        public Set<String> getPackageNames() {
-            return null;
-        }
-
-        @Override
-        public void register(String alias, Class<? extends Component> cls) {
-
-        }
-
-        @Override
-        public Class<? extends Component> getAliasClass(String alias) {
-            return null;
-        }
-    };
 
     @Override
     public List<String> getHandledLayouts() {
@@ -60,7 +36,7 @@ public class RelativeLayoutConstraints implements ConstraintsConversion {
                 throw new IllegalArgumentException(String.format("Unknown attribute [%s].", attribute));
             }
 
-            constraints.put(attribute, TypeConverter.convert(CONTEXT_PROVIDER, type, entry.getValue()));
+            constraints.put(attribute, TypeConverter.convert(contextProvider, type, entry.getValue()));
         }
 
         return constraints;

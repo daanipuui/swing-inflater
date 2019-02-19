@@ -2,10 +2,13 @@ package com.danielpuiu.swing.inflater.xml;
 
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.Component;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TestLoader {
 
@@ -14,25 +17,30 @@ public class TestLoader {
         ComponentLoader loader = new ComponentLoader();
         JPanel container = loader.load(getClass().getClassLoader().getResourceAsStream("layout.xml"));
 
-        assertEquals(4, container.getComponents().length);
+        assertEquals(5, container.getComponents().length);
 
-        assertTrue(container.getComponent(0) instanceof JLabel);
-        JLabel label = (JLabel) container.getComponent(0);
-        assertEquals("#1", label.getName());
-        assertEquals("Description", label.getText());
+        Component component1 = container.getComponent(0);
+        assertEquals(JLabel.class, component1.getClass());
+        assertEquals("#1", component1.getName());
+        assertEquals("Description", ((JLabel) component1).getText());
 
-        assertTrue(container.getComponent(1) instanceof JTextField);
-        JTextField textField = (JTextField) container.getComponent(1);
-        assertEquals("#2", textField.getName());
+        Component component2 = container.getComponent(1);
+        assertEquals(JTextField.class, component2.getClass());
+        assertEquals("#2", component2.getName());
 
-        assertTrue(container.getComponent(2) instanceof JLabel);
-        label = (JLabel) container.getComponent(2);
-        assertEquals("#3", label.getName());
-        assertEquals("Market name", label.getText());
+        Component component3 = container.getComponent(2);
+        assertEquals(JLabel.class, component3.getClass());
+        assertEquals("#3", component3.getName());
+        assertEquals("Market name", ((JLabel) component3).getText());
 
-        assertTrue(container.getComponent(3) instanceof JTextField);
-        textField = (JTextField) container.getComponent(3);
-        assertEquals("#4", textField.getName());
+        Component component4 = container.getComponent(3);
+        assertEquals(JTextField.class, component4.getClass());
+        assertEquals("#4", component4.getName());
+
+        Component component5 = container.getComponent(4);
+        assertEquals(JButton.class, component5.getClass());
+        assertEquals("#5", component5.getName());
+        assertEquals("click me", ((JButton) component5).getText());
     }
 
     @Test

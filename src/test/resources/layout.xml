@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <JPanel
     layout="com.danielpuiu.swing.inflater.layout.RelativeLayout"
-    layout_attribute:margins="10,10,10,10"
-    layout_attribute:padding="10,10,10,10">
+    layout:margins="10,10,10,10"
+    layout:padding="10,10,10,10">
 
     <JLabel
         name="#1"
@@ -12,32 +12,32 @@
     <JTextField
         name="#2"
         background="0xFF0000"
-        layout_constraint:rightOf="#1"
-        layout_constraint:centerVertical="#1"
-        layout_constraint:alignParentRight="true"/>
+        constraint:rightOf="#1"
+        constraint:centerVertical="#1"
+        constraint:alignParentRight="true"/>
 
     <JLabel
         name="#3"
         background="0xFF00FF"
         text="Market name"
-        layout_constraint:width=".5"
-        layout_constraint:below="#1"
-        layout_constraint:centerVerticalInParent="true"/>
+        constraint:width=".5"
+        constraint:below="#1"
+        constraint:centerVerticalInParent="true"/>
 
     <JTextField
         name="#4"
         background="0x00FF00"
-        layout_constraint:width=".2"
-        layout_constraint:rightOf="#3"
-        layout_constraint:alignTop="#3"
-        layout_constraint:alignLeft="#2"
-        layout_constraint:alignParentBottom="true"/>
+        constraint:width=".2"
+        constraint:rightOf="#3"
+        constraint:alignTop="#3"
+        constraint:alignLeft="#2"
+        constraint:alignParentBottom="true"/>
 
     <JButton
         name="#5"
         text="click me"
-        layout_constraint:rightOf="#4"
-        layout_constraint:below="#2"
-        layout_constraint:alignParentBottom="true"/>
+        constraint:rightOf="#4"
+        constraint:below="#2"
+        constraint:alignParentBottom="true"/>
 
 </JPanel>

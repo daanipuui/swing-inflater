@@ -37,8 +37,8 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
     private static final String VALUE_DELIMITER = ",";
 
     private static final String EMPTY_PREFIX = "";
-    private static final String LAYOUT_ATTRIBUTE_PREFIX = "layout_attribute";
-    private static final String LAYOUT_CONSTRAINT_PREFIX = "layout_constraint";
+    private static final String LAYOUT_ATTRIBUTE_PREFIX = "layout";
+    private static final String LAYOUT_CONSTRAINT_PREFIX = "constraint";
 
     private static final String SETTER_PREFIX = "set";
 

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<JPanel>
+
+    <BorderLayout/>
+
+    <JButton
+        name="north"
+        text="north"
+        layout:position="NORTH"/>
+
+    <JButton
+        name="south"
+        text="south"
+        layout:position="SOUTH"/>
+
+    <JButton
+        name="center"
+        text="center"/>
+
+    <JButton
+        name="east"
+        text="east"
+        layout:position="EAST"/>
+
+    <JButton
+        name="west"
+        text="west"
+        layout:position="WEST"/>
+
+</JPanel>

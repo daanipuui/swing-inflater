@@ -1,7 +1,6 @@
 package com.danielpuiu.swing.inflater;
 
 import javax.swing.JComponent;
-import java.awt.Component;
 import java.util.Set;
 
 public interface ContextProvider {

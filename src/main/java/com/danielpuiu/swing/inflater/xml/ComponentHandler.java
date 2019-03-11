@@ -78,6 +78,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
 
         if (object instanceof LayoutManager) {
             parent.setLayout(cast(object));
+            logger.debug("Set layout [{}] on element [{}].", object.getClass().getSimpleName(), parent);
             return;
         }
 
@@ -171,7 +172,8 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
             JComponent element = cast(object);
             String name = element.getName();
             if (nameToComponent.containsKey(name)) {
-                logger.warn("Duplicate element name [{}]", name);
+                logger.warn("Duplicate element name [{}] found. Using toString instead.", name);
+                name = element.toString();
             }
 
             nameToComponent.put(name, element);
@@ -221,11 +223,13 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
         LayoutManager layoutManager = parent.getLayout();
         if (Objects.isNull(layoutManager)) {
             parent.add(element);
+            logger.debug("Add element [{}] to container [{}].", element, parent);
             return;
         }
 
         Object constraints = getConstraints(layoutManager.getClass().getName(), layoutConstraints);
         parent.add(element, constraints);
+        logger.debug("Add element [{}] to container [{}] using constraints [{}].", element, parent, constraints);
     }
 
     private Object getConstraints(String layout, Map<String, String> layoutConstraints) {

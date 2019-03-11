@@ -27,7 +27,7 @@ public class BorderLayoutConstraints implements ConstraintsConversion {
     @Override
     public Object convert(ContextProvider contextProvider, Map<String, String> map) {
         String value = map.getOrDefault("position", CENTER);
-        String constraint = (String) convertConstant(contextProvider, value);
+        String constraint = (String) convertConstant(contextProvider, "BorderLayout." + value);
         if (Objects.isNull(constraint)) {
             constraint = value;
         }

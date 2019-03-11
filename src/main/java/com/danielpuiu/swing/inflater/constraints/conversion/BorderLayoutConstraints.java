@@ -7,17 +7,10 @@ import java.awt.BorderLayout;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.EAST;
-import static java.awt.BorderLayout.NORTH;
-import static java.awt.BorderLayout.SOUTH;
-import static java.awt.BorderLayout.WEST;
 
 public class BorderLayoutConstraints implements ConstraintsConversion {
-
-    private static final List<String> POSITIONS = Arrays.asList(CENTER, EAST, WEST, SOUTH, NORTH);
 
     @Override
     public List<String> getHandledLayouts() {
@@ -27,11 +20,6 @@ public class BorderLayoutConstraints implements ConstraintsConversion {
     @Override
     public Object convert(ContextProvider contextProvider, Map<String, String> map) {
         String value = map.getOrDefault("position", CENTER);
-        String constraint = (String) convertConstant(contextProvider, value);
-        if (Objects.isNull(constraint)) {
-            constraint = value;
-        }
-
-        return POSITIONS.contains(constraint) ? constraint : CENTER;
+        return convertConstant(contextProvider, "BorderLayout." + value);
     }
 }

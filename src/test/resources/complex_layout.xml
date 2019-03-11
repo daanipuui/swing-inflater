@@ -1,64 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<JPanel
-    layout="com.danielpuiu.swing.inflater.layout.RelativeLayout"
-    layout:margins="5,5,5,5">
+<JPanel>
+    
+    <com.danielpuiu.swing.inflater.layout.RelativeLayout margins="5,5,5,5"/>
 
     <JPanel
         name="#1"
-        layout="com.danielpuiu.swing.inflater.layout.RelativeLayout"
-        layout:margins="5,5,5,5"
-        constraint:width="0.2"
-        constraint:height="0.5">
+        layout:width="0.2"
+        layout:height="0.5">
+
+        <com.danielpuiu.swing.inflater.layout.RelativeLayout
+            margins="5,5,5,5"/>
 
         <JPanel
-            constraint:width="1"
-            constraint:height="1"
+            layout:width="1"
+            layout:height="1"
             background="#FFFF00"/>
 
     </JPanel>
 
     <JPanel
         name="#2"
-        layout="com.danielpuiu.swing.inflater.layout.RelativeLayout"
-        layout:margins="5,5,5,5"
-        constraint:width="0.8"
-        constraint:height="0.5"
-        constraint:rightOf="#1">
+        layout:width="0.8"
+        layout:height="0.5"
+        layout:rightOf="#1">
+        
+        <com.danielpuiu.swing.inflater.layout.RelativeLayout margins="5,5,5,5"/>
 
         <JPanel
-            constraint:width="1"
-            constraint:height="1"
+            layout:width="1"
+            layout:height="1"
             background="#FF00FF"/>
 
     </JPanel>
 
     <JPanel
         name="#3"
-        layout="com.danielpuiu.swing.inflater.layout.RelativeLayout"
-        layout:margins="5,5,5,5"
-        constraint:width="0.2"
-        constraint:height="0.5"
-        constraint:below="#1">
+        layout:width="0.2"
+        layout:height="0.5"
+        layout:below="#1">
+        
+        <com.danielpuiu.swing.inflater.layout.RelativeLayout margins="5,5,5,5"/>
 
         <JPanel
-            constraint:width="1"
-            constraint:height="1"
+            layout:width="1"
+            layout:height="1"
             background="#00FFFF"/>
 
     </JPanel>
 
     <JPanel
         name="#4"
-        layout="com.danielpuiu.swing.inflater.layout.RelativeLayout"
-        layout:margins="5,5,5,5"
-        constraint:width="0.8"
-        constraint:height="0.5"
-        constraint:rightOf="#3"
-        constraint:alignTop="#3">
+        layout:width="0.8"
+        layout:height="0.5"
+        layout:rightOf="#3"
+        layout:alignTop="#3">
+
+        <com.danielpuiu.swing.inflater.layout.RelativeLayout margins="5,5,5,5"/>
 
         <JPanel
-            constraint:width="1"
-            constraint:height="1"
+            layout:width="1"
+            layout:height="1"
             background="#00FF00"/>
 
     </JPanel>

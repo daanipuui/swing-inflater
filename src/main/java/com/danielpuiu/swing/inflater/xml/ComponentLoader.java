@@ -5,10 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import javax.swing.JComponent;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class ComponentLoader implements ContextProvider {
 
     private final Set<String> importedPackageNames = initPackageNames();
 
-    private final Map<String, Class<? extends Component>> aliases = new HashMap<>();
+    private final Map<String, Class<? extends JComponent>> aliases = new HashMap<>();
 
     public <T> T load(InputStream inputStream) {
         try {
@@ -44,7 +44,7 @@ public class ComponentLoader implements ContextProvider {
         return null;
     }
 
-    public <T extends Component> T getComponent(String name) {
+    public <T extends JComponent> T getComponent(String name) {
         return componentHandler.getComponent(name);
     }
 
@@ -59,11 +59,11 @@ public class ComponentLoader implements ContextProvider {
         return new HashSet<>(importedPackageNames);
     }
 
-    public void register(String alias, Class<? extends Component> cls) {
+    public void register(String alias, Class<? extends JComponent> cls) {
         aliases.put(alias, cls);
     }
 
-    public Class<? extends Component> getAliasClass(String alias) {
+    public Class<? extends JComponent> getAliasClass(String alias) {
         return aliases.get(alias);
     }
 

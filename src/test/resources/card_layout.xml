@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<JPanel>
+
+    <CardLayout/>
+
+    <JPanel
+        name="first"
+        layout:cardId="FIRST"/>
+
+    <JPanel
+        name="second"
+        layout:cardId="SECOND"/>
+
+</JPanel>

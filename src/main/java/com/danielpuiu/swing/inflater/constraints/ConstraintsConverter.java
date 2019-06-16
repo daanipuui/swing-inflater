@@ -5,6 +5,7 @@ import com.danielpuiu.swing.inflater.constraints.conversion.BorderLayoutConstrai
 import com.danielpuiu.swing.inflater.constraints.conversion.CardLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.FlowLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.GridBagLayoutConstraints;
+import com.danielpuiu.swing.inflater.constraints.conversion.GridLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.RelativeLayoutConstraints;
 import com.danielpuiu.swing.inflater.exceptions.NoArgumentConstructorNotFoundException;
 
@@ -22,7 +23,8 @@ public class ConstraintsConverter {
                 FlowLayoutConstraints.class,
                 BorderLayoutConstraints.class,
                 CardLayoutConstraints.class,
-                GridBagLayoutConstraints.class
+                GridBagLayoutConstraints.class,
+                GridLayoutConstraints.class
         ).forEach(ConstraintsConverter::registerConverter);
     }
 

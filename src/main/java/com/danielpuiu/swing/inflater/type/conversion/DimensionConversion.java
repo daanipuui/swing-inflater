@@ -1,6 +1,6 @@
 package com.danielpuiu.swing.inflater.type.conversion;
 
-import com.danielpuiu.swing.inflater.ContextProvider;
+import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.type.TypeConversion;
 
 import java.awt.Dimension;
@@ -15,7 +15,7 @@ public class DimensionConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(ContextProvider contextProvider, String value) {
+    public Object convertLiteral(PackageProvider packageProvider, String value) {
         String[] values = value.split(",");
         if (values.length != 2) {
             return null;

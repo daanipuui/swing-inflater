@@ -1,6 +1,6 @@
 package com.danielpuiu.swing.inflater.type.conversion;
 
-import com.danielpuiu.swing.inflater.ContextProvider;
+import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.type.TypeConversion;
 import com.danielpuiu.swing.inflater.util.StringUtil;
 
@@ -23,7 +23,7 @@ public class BorderConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(ContextProvider contextProvider, String value) {
+    public Object convertLiteral(PackageProvider packageProvider, String value) {
         String[] values = value.split(",");
 
         String methodName = "create" + StringUtil.capitalize(values[0]) + "Border";
@@ -33,7 +33,7 @@ public class BorderConversion implements TypeConversion {
         String[] arguments = Arrays.copyOfRange(values, 1, values.length);
         for (Method method : methods) {
             try {
-                return method.invoke(null, convertValues(contextProvider, method.getGenericParameterTypes(), arguments));
+                return method.invoke(null, convertValues(packageProvider, method.getGenericParameterTypes(), arguments));
             } catch (IllegalAccessException | InvocationTargetException e) {
                 // nothing to do
             }

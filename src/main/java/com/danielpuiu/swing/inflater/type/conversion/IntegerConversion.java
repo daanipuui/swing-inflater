@@ -1,6 +1,6 @@
 package com.danielpuiu.swing.inflater.type.conversion;
 
-import com.danielpuiu.swing.inflater.ContextProvider;
+import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.type.TypeConversion;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ public class IntegerConversion implements TypeConversion {
     }
 
     @Override
-    public Integer convertLiteral(ContextProvider contextProvider, String value) {
+    public Integer convertLiteral(PackageProvider packageProvider, String value) {
         return convertLiteral(Integer::parseInt, value);
     }
 }

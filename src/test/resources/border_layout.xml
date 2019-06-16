@@ -25,6 +25,6 @@
     <JButton
         name="west"
         text="west"
-        layout:position="WEST"/>
+        layout:position="BorderLayout.WEST"/>
 
 </JPanel>

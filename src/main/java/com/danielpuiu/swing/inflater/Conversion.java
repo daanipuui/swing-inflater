@@ -2,10 +2,12 @@ package com.danielpuiu.swing.inflater;
 
 import java.lang.reflect.Field;
 
+import static com.danielpuiu.swing.inflater.util.ObjectUtil.cast;
+
 public interface Conversion {
 
-    default Object convertConstant(ContextProvider contextProvider, String value) {
-        for (String packageName : contextProvider.getPackageNames()) {
+    default <T> T convertConstant(PackageProvider packageProvider, String value) {
+        for (String packageName : packageProvider.getPackageNames()) {
             String fullName = packageName + value;
 
             int dotPosition = fullName.lastIndexOf('.');
@@ -19,8 +21,7 @@ public interface Conversion {
             try {
                 Class<?> cls = Class.forName(className);
                 Field field = cls.getDeclaredField(constantName);
-                return field.get(null);
-
+                return cast(field.get(null));
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                 // nothing to do
             }

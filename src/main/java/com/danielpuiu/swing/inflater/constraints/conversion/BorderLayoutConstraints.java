@@ -19,7 +19,10 @@ public class BorderLayoutConstraints implements ConstraintsConversion {
 
     @Override
     public Object convert(ContextProvider contextProvider, Map<String, String> map) {
+        EnhancedPackageProvider packageProvider = new EnhancedPackageProvider(contextProvider);
+        packageProvider.addClass(BorderLayout.class);
+
         String value = map.getOrDefault("position", CENTER);
-        return convertConstant(contextProvider, "BorderLayout." + value);
+        return convertConstant(packageProvider, value);
     }
 }

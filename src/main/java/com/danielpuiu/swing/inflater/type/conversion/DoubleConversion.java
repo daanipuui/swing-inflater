@@ -1,6 +1,6 @@
 package com.danielpuiu.swing.inflater.type.conversion;
 
-import com.danielpuiu.swing.inflater.ContextProvider;
+import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.type.TypeConversion;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ public class DoubleConversion implements TypeConversion {
     }
 
     @Override
-    public Double convertLiteral(ContextProvider contextProvider, String value) {
+    public Double convertLiteral(PackageProvider packageProvider, String value) {
         return convertLiteral(Double::parseDouble, value);
     }
 }

@@ -1,6 +1,6 @@
 package com.danielpuiu.swing.inflater.type.conversion;
 
-import com.danielpuiu.swing.inflater.ContextProvider;
+import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.type.TypeConversion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,17 +21,17 @@ public class LayoutConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(ContextProvider contextProvider, String value) {
+    public Object convertLiteral(PackageProvider packageProvider, String value) {
         try {
-            return getClass(contextProvider, value).newInstance();
+            return getClass(packageProvider, value).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             logger.error("Layout conversion failed because [{}].", e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
-    private Class<?> getClass(ContextProvider contextProvider, String value) throws ClassNotFoundException {
-        for (String packageName : contextProvider.getPackageNames()) {
+    private Class<?> getClass(PackageProvider packageProvider, String value) throws ClassNotFoundException {
+        for (String packageName : packageProvider.getPackageNames()) {
             try {
                 return Class.forName(packageName + value);
             } catch (ClassNotFoundException e) {

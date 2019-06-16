@@ -1,15 +1,12 @@
 package com.danielpuiu.swing.inflater;
 
 import javax.swing.JComponent;
-import java.util.Set;
 
-public interface ContextProvider {
+public interface ContextProvider extends PackageProvider{
 
     void register(String... packageNames);
 
     void register(String alias, Class<? extends JComponent> cls);
-
-    Set<String> getPackageNames();
 
     Class<? extends JComponent> getAliasClass(String alias);
 }

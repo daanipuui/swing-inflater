@@ -4,6 +4,7 @@ import com.danielpuiu.swing.inflater.ContextProvider;
 import com.danielpuiu.swing.inflater.constraints.conversion.BorderLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.CardLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.FlowLayoutConstraints;
+import com.danielpuiu.swing.inflater.constraints.conversion.GridBagLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.RelativeLayoutConstraints;
 import com.danielpuiu.swing.inflater.exceptions.NoArgumentConstructorNotFoundException;
 
@@ -13,11 +14,16 @@ import java.util.Map;
 
 public class ConstraintsConverter {
 
-    private static final HashMap<String, ConstraintsConversion> REGISTERED_CONVERTERS = new HashMap<>();
+    private static final Map<String, ConstraintsConversion> REGISTERED_CONVERTERS = new HashMap<>();
 
     static {
-        Arrays.asList(RelativeLayoutConstraints.class, FlowLayoutConstraints.class, BorderLayoutConstraints.class, CardLayoutConstraints.class).forEach(
-                ConstraintsConverter::registerConverter);
+        Arrays.asList(
+                RelativeLayoutConstraints.class,
+                FlowLayoutConstraints.class,
+                BorderLayoutConstraints.class,
+                CardLayoutConstraints.class,
+                GridBagLayoutConstraints.class
+        ).forEach(ConstraintsConverter::registerConverter);
     }
 
     private ConstraintsConverter() {

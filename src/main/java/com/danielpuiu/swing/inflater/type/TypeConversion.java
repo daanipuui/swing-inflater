@@ -1,7 +1,7 @@
 package com.danielpuiu.swing.inflater.type;
 
-import com.danielpuiu.swing.inflater.ContextProvider;
 import com.danielpuiu.swing.inflater.Conversion;
+import com.danielpuiu.swing.inflater.PackageProvider;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,16 +11,16 @@ public interface TypeConversion extends Conversion {
 
     List<String> getHandledTypes();
 
-    default Object convert(ContextProvider contextProvider, String value) {
-        Object object = convertConstant(contextProvider, value);
+    default <T> T convert(PackageProvider packageProvider, String value) {
+        T object = convertConstant(packageProvider, value);
         if (Objects.nonNull(object)) {
             return object;
         }
 
-        return convertLiteral(contextProvider, value);
+        return convertLiteral(packageProvider, value);
     }
 
-    Object convertLiteral(ContextProvider contextProvider, String value);
+    <T> T  convertLiteral(PackageProvider packageProvider, String value);
 
     default <T> T convertLiteral(Function<String, T> function, String value) {
         try {

@@ -41,7 +41,7 @@ public class TestBorderLayout {
         BorderLayout borderLayout = cast(layoutManager);
         List<String> positions = Arrays.asList(NORTH, SOUTH, CENTER, EAST, WEST);
         for (int i = 0; i < 5; i++) {
-            assertEquals(loader.getComponent(names.get(i)), borderLayout.getLayoutComponent(positions.get(i)));
+            assertEquals("Component #" + i, loader.getComponent(names.get(i)), borderLayout.getLayoutComponent(positions.get(i)));
         }
     }
 }

@@ -38,7 +38,7 @@ public class TypeConverter {
         // prevent instantiation
     }
 
-    public static <T> T  convert(PackageProvider packageProvider, String type, String value) {
+    public static <T> T convert(PackageProvider packageProvider, String type, String value) {
         if (REGISTERED_CONVERTERS.containsKey(type)) {
             return REGISTERED_CONVERTERS.get(type).convert(packageProvider, value);
         }

@@ -20,7 +20,7 @@ public interface TypeConversion extends Conversion {
         return convertLiteral(packageProvider, value);
     }
 
-    <T> T  convertLiteral(PackageProvider packageProvider, String value);
+    <T> T convertLiteral(PackageProvider packageProvider, String value);
 
     default <T> T convertLiteral(Function<String, T> function, String value) {
         try {

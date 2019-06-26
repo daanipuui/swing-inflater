@@ -228,16 +228,16 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
             return;
         }
 
-        Object constraints = getConstraints(layoutManager.getClass().getName(), layoutConstraints);
+        Object constraints = getConstraints(layoutManager, layoutConstraints);
         parent.add(element, constraints);
         logger.debug("Add element [{}] to container [{}] using constraints [{}].", element, parent, constraints);
     }
 
-    private Object getConstraints(String layout, Map<String, String> layoutConstraints) {
+    private Object getConstraints(LayoutManager layoutManager, Map<String, String> layoutConstraints) {
         if (Objects.isNull(layoutConstraints) || layoutConstraints.isEmpty()) {
             return null;
         }
 
-        return ConstraintsConverter.convert(contextProvider, layout, layoutConstraints);
+        return ConstraintsConverter.convert(contextProvider, layoutManager, layoutConstraints);
     }
 }

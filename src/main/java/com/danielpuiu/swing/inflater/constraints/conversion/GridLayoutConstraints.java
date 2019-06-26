@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class GridLayoutConstraints implements ConstraintsConversion {
+public class GridLayoutConstraints implements ConstraintsConversion<GridLayout> {
 
     @Override
     public List<String> getHandledLayouts() {
@@ -16,7 +16,7 @@ public class GridLayoutConstraints implements ConstraintsConversion {
     }
 
     @Override
-    public Object convert(ContextProvider contextProvider, Map<String, String> map) {
+    public Object convert(ContextProvider contextProvider, GridLayout layoutManager, Map<String, String> map) {
         return null;
     }
 }

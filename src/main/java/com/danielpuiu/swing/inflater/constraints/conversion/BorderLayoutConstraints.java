@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static java.awt.BorderLayout.CENTER;
 
-public class BorderLayoutConstraints implements ConstraintsConversion {
+public class BorderLayoutConstraints implements ConstraintsConversion<BorderLayout> {
 
     @Override
     public List<String> getHandledLayouts() {
@@ -18,7 +18,7 @@ public class BorderLayoutConstraints implements ConstraintsConversion {
     }
 
     @Override
-    public Object convert(ContextProvider contextProvider, Map<String, String> map) {
+    public Object convert(ContextProvider contextProvider, BorderLayout layoutManager, Map<String, String> map) {
         EnhancedPackageProvider packageProvider = new EnhancedPackageProvider(contextProvider);
         packageProvider.addClass(BorderLayout.class);
 

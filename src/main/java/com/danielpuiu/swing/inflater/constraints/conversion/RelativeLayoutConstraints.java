@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class RelativeLayoutConstraints implements ConstraintsConversion {
+public class RelativeLayoutConstraints implements ConstraintsConversion<RelativeLayout> {
 
     private static final String COMPONENT = "Component";
     private static final String BOOLEAN = "Boolean";
@@ -26,7 +26,7 @@ public class RelativeLayoutConstraints implements ConstraintsConversion {
     }
 
     @Override
-    public Object convert(ContextProvider contextProvider, Map<String, String> map) {
+    public Object convert(ContextProvider contextProvider, RelativeLayout layoutManager, Map<String, String> map) {
         Map<String, Object> constraints = new HashMap<>();
 
         for (Map.Entry<String, String> entry : map.entrySet()) {

@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GridBagLayoutConstraints implements ConstraintsConversion {
+public class GridBagLayoutConstraints implements ConstraintsConversion<GridBagLayout> {
 
     private static final Map<String, String> attributeToTypeNames = init();
 
@@ -28,7 +28,7 @@ public class GridBagLayoutConstraints implements ConstraintsConversion {
     }
 
     @Override
-    public Object convert(ContextProvider contextProvider, Map<String, String> map) {
+    public Object convert(ContextProvider contextProvider, GridBagLayout layoutManager, Map<String, String> map) {
         EnhancedPackageProvider packageProvider = new EnhancedPackageProvider(contextProvider);
         packageProvider.addClass(GridBagConstraints.class);
 

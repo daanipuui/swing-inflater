@@ -7,15 +7,17 @@ import com.danielpuiu.swing.inflater.constraints.conversion.FlowLayoutConstraint
 import com.danielpuiu.swing.inflater.constraints.conversion.GridBagLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.GridLayoutConstraints;
 import com.danielpuiu.swing.inflater.constraints.conversion.RelativeLayoutConstraints;
+import com.danielpuiu.swing.inflater.constraints.conversion.SprintLayoutConstraints;
 import com.danielpuiu.swing.inflater.exceptions.NoArgumentConstructorNotFoundException;
 
+import java.awt.LayoutManager;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConstraintsConverter {
 
-    private static final Map<String, ConstraintsConversion> REGISTERED_CONVERTERS = new HashMap<>();
+    private static final Map<String, ConstraintsConversion<LayoutManager>> REGISTERED_CONVERTERS = new HashMap<>();
 
     static {
         Arrays.asList(
@@ -24,7 +26,8 @@ public class ConstraintsConverter {
                 BorderLayoutConstraints.class,
                 CardLayoutConstraints.class,
                 GridBagLayoutConstraints.class,
-                GridLayoutConstraints.class
+                GridLayoutConstraints.class,
+                SprintLayoutConstraints.class
         ).forEach(ConstraintsConverter::registerConverter);
     }
 
@@ -32,19 +35,22 @@ public class ConstraintsConverter {
         // prevent instantiation
     }
 
-    public static Object convert(ContextProvider contextProvider, String layout, Map<String, String> map) {
-        if (REGISTERED_CONVERTERS.containsKey(layout)) {
-            return REGISTERED_CONVERTERS.get(layout).convert(contextProvider, map);
+    public static Object convert(ContextProvider contextProvider, LayoutManager layoutManager, Map<String, String> map) {
+        String className = layoutManager.getClass().getName();
+        if (REGISTERED_CONVERTERS.containsKey(className)) {
+            return REGISTERED_CONVERTERS.get(className).convert(contextProvider, layoutManager, map);
         }
 
-        throw new IllegalArgumentException("Unknown layout: " + layout);
+        throw new IllegalArgumentException("Unhandled layout type: " + className);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static void registerConverter(Class<? extends ConstraintsConversion> constraintsConversion) {
         registerConverter(newInstance(constraintsConversion));
     }
 
-    public static void registerConverter(ConstraintsConversion conversion) {
+    @SuppressWarnings("WeakerAccess")
+    public static void registerConverter(ConstraintsConversion<LayoutManager> conversion) {
         for (String layout : conversion.getHandledLayouts()) {
             REGISTERED_CONVERTERS.put(layout, conversion);
         }

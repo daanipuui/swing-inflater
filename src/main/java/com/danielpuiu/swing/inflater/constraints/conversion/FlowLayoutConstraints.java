@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class FlowLayoutConstraints implements ConstraintsConversion {
+public class FlowLayoutConstraints implements ConstraintsConversion<FlowLayout> {
 
     @Override
     public List<String> getHandledLayouts() {
@@ -16,7 +16,7 @@ public class FlowLayoutConstraints implements ConstraintsConversion {
     }
 
     @Override
-    public Object convert(ContextProvider contextProvider, Map<String, String> map) {
+    public Object convert(ContextProvider contextProvider, FlowLayout layoutManager, Map<String, String> map) {
         return null;
     }
 }

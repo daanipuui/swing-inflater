@@ -6,7 +6,7 @@ import com.danielpuiu.swing.inflater.type.TypeConversion;
 import java.util.Arrays;
 import java.util.List;
 
-public class BooleanConversion implements TypeConversion {
+public class BooleanConversion implements TypeConversion<Boolean> {
 
     @Override
     public List<String> getHandledTypes() {
@@ -14,7 +14,7 @@ public class BooleanConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public Boolean convertLiteral(PackageProvider packageProvider, String value) {
         return convertLiteral(Boolean::parseBoolean, value);
     }
 }

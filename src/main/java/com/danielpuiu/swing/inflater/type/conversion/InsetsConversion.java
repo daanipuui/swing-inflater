@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class InsetsConversion implements TypeConversion {
+public class InsetsConversion implements TypeConversion<Insets> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -20,7 +20,7 @@ public class InsetsConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public Insets convertLiteral(PackageProvider packageProvider, String value) {
         if (Objects.isNull(value)) {
             return null;
         }

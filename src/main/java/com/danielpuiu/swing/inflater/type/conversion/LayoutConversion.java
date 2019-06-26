@@ -10,7 +10,7 @@ import java.awt.LayoutManager2;
 import java.util.Arrays;
 import java.util.List;
 
-public class LayoutConversion implements TypeConversion {
+public class LayoutConversion implements TypeConversion<LayoutManager> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -21,9 +21,9 @@ public class LayoutConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public LayoutManager convertLiteral(PackageProvider packageProvider, String value) {
         try {
-            return getClass(packageProvider, value).newInstance();
+            return (LayoutManager) getClass(packageProvider, value).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             logger.error("Layout conversion failed because [{}].", e.getMessage());
             throw new IllegalArgumentException(e.getMessage());

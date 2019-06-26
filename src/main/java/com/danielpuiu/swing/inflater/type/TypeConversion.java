@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public interface TypeConversion extends Conversion {
+public interface TypeConversion<T> extends Conversion {
 
     List<String> getHandledTypes();
 
-    default <T> T convert(PackageProvider packageProvider, String value) {
+    T convertLiteral(PackageProvider packageProvider, String value);
+
+    default T convert(PackageProvider packageProvider, String value) {
         T object = convertConstant(packageProvider, value);
         if (Objects.nonNull(object)) {
             return object;
@@ -20,9 +22,7 @@ public interface TypeConversion extends Conversion {
         return convertLiteral(packageProvider, value);
     }
 
-    <T> T convertLiteral(PackageProvider packageProvider, String value);
-
-    default <T> T convertLiteral(Function<String, T> function, String value) {
+    default T convertLiteral(Function<String, T> function, String value) {
         try {
             return function.apply(value.trim());
         } catch (Exception e) {

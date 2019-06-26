@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.danielpuiu.swing.inflater.type.TypeConverter.convertValues;
+import static com.danielpuiu.swing.inflater.util.ObjectUtil.cast;
 
-public class BorderConversion implements TypeConversion {
+public class BorderConversion implements TypeConversion<Border> {
 
     @Override
     public List<String> getHandledTypes() {
@@ -23,18 +24,20 @@ public class BorderConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public Border convertLiteral(PackageProvider packageProvider, String value) {
         String[] values = value.split(",");
 
         String methodName = "create" + StringUtil.capitalize(values[0]) + "Border";
-        List<Method> methods = Stream.of(BorderFactory.class.getMethods()).filter(method -> methodName.equals(method.getName())).filter(method ->
-                method.getParameterCount() == (values.length - 1)).collect(Collectors.toList());
+        List<Method> methods = Stream.of(BorderFactory.class.getMethods())
+                .filter(method -> methodName.equals(method.getName()))
+                .filter(method -> method.getParameterCount() == (values.length - 1))
+                .collect(Collectors.toList());
 
         String[] arguments = Arrays.copyOfRange(values, 1, values.length);
         for (Method method : methods) {
             try {
-                return method.invoke(null, convertValues(packageProvider, method.getGenericParameterTypes(), arguments));
-            } catch (IllegalAccessException | InvocationTargetException e) {
+                return cast(method.invoke(null, convertValues(packageProvider, method.getGenericParameterTypes(), arguments)));
+            } catch (IllegalAccessException | InvocationTargetException | ClassCastException e) {
                 // nothing to do
             }
         }

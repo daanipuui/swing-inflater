@@ -56,10 +56,12 @@ public class ConstraintsConverter {
         }
     }
 
+    @SuppressWarnings("unused")
     public static void unregisterConverter(Class<? extends ConstraintsConversion> constraintsConversion) {
         newInstance(constraintsConversion).getHandledLayouts().forEach(REGISTERED_CONVERTERS::remove);
     }
 
+    @SuppressWarnings("unused")
     public static boolean handles(String layout) {
         return REGISTERED_CONVERTERS.containsKey(layout);
     }

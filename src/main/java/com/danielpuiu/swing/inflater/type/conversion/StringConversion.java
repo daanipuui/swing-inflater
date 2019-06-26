@@ -6,7 +6,7 @@ import com.danielpuiu.swing.inflater.type.TypeConversion;
 import java.util.Arrays;
 import java.util.List;
 
-public class StringConversion implements TypeConversion {
+public class StringConversion implements TypeConversion<String> {
 
     @Override
     public List<String> getHandledTypes() {
@@ -14,7 +14,7 @@ public class StringConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public String convertLiteral(PackageProvider packageProvider, String value) {
         return value;
     }
 }

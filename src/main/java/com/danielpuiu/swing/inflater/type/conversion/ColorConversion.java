@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-public class ColorConversion implements TypeConversion {
+public class ColorConversion implements TypeConversion<Color> {
 
     @Override
     public List<String> getHandledTypes() {
@@ -15,7 +15,7 @@ public class ColorConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public Color convertLiteral(PackageProvider packageProvider, String value) {
         return convertLiteral(Color::getColor, value);
     }
 }

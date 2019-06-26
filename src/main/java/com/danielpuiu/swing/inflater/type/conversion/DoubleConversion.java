@@ -6,7 +6,7 @@ import com.danielpuiu.swing.inflater.type.TypeConversion;
 import java.util.Arrays;
 import java.util.List;
 
-public class DoubleConversion implements TypeConversion {
+public class DoubleConversion implements TypeConversion<Double> {
 
     @Override
     public List<String> getHandledTypes() {

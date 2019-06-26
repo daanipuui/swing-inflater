@@ -7,7 +7,7 @@ import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 
-public class DimensionConversion implements TypeConversion {
+public class DimensionConversion implements TypeConversion<Dimension> {
 
     @Override
     public List<String> getHandledTypes() {
@@ -15,7 +15,7 @@ public class DimensionConversion implements TypeConversion {
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public Dimension convertLiteral(PackageProvider packageProvider, String value) {
         String[] values = value.split(",");
         if (values.length != 2) {
             return null;

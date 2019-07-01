@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Insets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,8 +16,8 @@ public class InsetsConversion implements TypeConversion<Insets> {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Insets.class.getName(), Insets.class.getSimpleName(), "insets");
+    public List<Class> getHandledTypes() {
+        return Collections.singletonList(Insets.class);
     }
 
     @Override

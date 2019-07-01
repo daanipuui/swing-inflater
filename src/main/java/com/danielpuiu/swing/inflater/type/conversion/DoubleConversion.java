@@ -9,8 +9,8 @@ import java.util.List;
 public class DoubleConversion implements TypeConversion<Double> {
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Double.class.getName(), Double.class.getSimpleName(), "double");
+    public List<Class> getHandledTypes() {
+        return Arrays.asList(Double.class, double.class);
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public interface TypeConversion<T> extends Conversion {
 
-    List<String> getHandledTypes();
+    List<Class> getHandledTypes();
 
     T convertLiteral(PackageProvider packageProvider, String value);
 

@@ -7,20 +7,21 @@ import com.danielpuiu.swing.inflater.type.conversion.BorderConversion;
 import com.danielpuiu.swing.inflater.type.conversion.ColorConversion;
 import com.danielpuiu.swing.inflater.type.conversion.DimensionConversion;
 import com.danielpuiu.swing.inflater.type.conversion.DoubleConversion;
+import com.danielpuiu.swing.inflater.type.conversion.EventListenerConversion;
 import com.danielpuiu.swing.inflater.type.conversion.InsetsConversion;
 import com.danielpuiu.swing.inflater.type.conversion.IntegerConversion;
 import com.danielpuiu.swing.inflater.type.conversion.LayoutConversion;
 import com.danielpuiu.swing.inflater.type.conversion.StringConversion;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.danielpuiu.swing.inflater.util.ObjectUtil.cast;
 
 public class TypeConverter {
 
-    private static final HashMap<String, TypeConversion> REGISTERED_CONVERTERS = new HashMap<>();
+    private static final HashMap<Class, TypeConversion> REGISTERED_CONVERTERS = new HashMap<>();
 
     static {
         Arrays.asList(
@@ -32,7 +33,8 @@ public class TypeConverter {
                 LayoutConversion.class,
                 DimensionConversion.class,
                 BorderConversion.class,
-                InsetsConversion.class
+                InsetsConversion.class,
+                EventListenerConversion.class
         ).forEach(TypeConverter::registerConverter);
     }
 
@@ -40,12 +42,12 @@ public class TypeConverter {
         // prevent instantiation
     }
 
-    public static <T> T convert(PackageProvider packageProvider, String type, String value) {
-        if (REGISTERED_CONVERTERS.containsKey(type)) {
-            return cast(REGISTERED_CONVERTERS.get(type).convert(packageProvider, value));
+    public static <T> T convert(PackageProvider packageProvider, Class type, String value) {
+        if (!REGISTERED_CONVERTERS.containsKey(type)) {
+            tryRegisterSubType(type);
         }
 
-        throw new IllegalArgumentException("Unknown type: " + type);
+        return cast(REGISTERED_CONVERTERS.get(type).convert(packageProvider, value));
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -54,7 +56,7 @@ public class TypeConverter {
     }
 
     public static void registerConverter(TypeConversion<?> conversion) {
-        for (String type : conversion.getHandledTypes()) {
+        for (Class type : conversion.getHandledTypes()) {
             REGISTERED_CONVERTERS.put(type, conversion);
         }
     }
@@ -70,17 +72,28 @@ public class TypeConverter {
     }
 
     @SuppressWarnings("unused")
-    public static boolean handles(String type) {
+    public static boolean handles(Class type) {
         return REGISTERED_CONVERTERS.containsKey(type);
     }
 
-    public static Object[] convertValues(PackageProvider packageProvider, Type[] types, String[] values) {
+    public static Object[] convertValues(PackageProvider packageProvider, Class[] types, String[] values) {
         Object[] convertedValues = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
-            convertedValues[i] = convert(packageProvider, types[i].getTypeName(), values[i]);
+            convertedValues[i] = convert(packageProvider, types[i], values[i]);
         }
 
         return convertedValues;
+    }
+
+    private static void tryRegisterSubType(Class type) {
+        for (Map.Entry<Class, TypeConversion> entry: REGISTERED_CONVERTERS.entrySet()) {
+            if (entry.getKey().isAssignableFrom(type)) {
+                REGISTERED_CONVERTERS.put(type, entry.getValue());
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException("Unhandled attribute type: " + type);
     }
 
     private static TypeConversion newInstance(Class<? extends TypeConversion> typeConversion) {

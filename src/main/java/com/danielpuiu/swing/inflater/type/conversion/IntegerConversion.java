@@ -9,8 +9,8 @@ import java.util.List;
 public class IntegerConversion implements TypeConversion<Integer> {
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Integer.class.getName(), Integer.class.getSimpleName(), "integer", "int");
+    public List<Class> getHandledTypes() {
+        return Arrays.asList(Integer.class, int.class);
     }
 
     @Override

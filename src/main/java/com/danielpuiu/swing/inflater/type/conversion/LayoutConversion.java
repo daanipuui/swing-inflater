@@ -6,8 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.LayoutManager;
-import java.awt.LayoutManager2;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class LayoutConversion implements TypeConversion<LayoutManager> {
@@ -15,9 +14,8 @@ public class LayoutConversion implements TypeConversion<LayoutManager> {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(LayoutManager.class.getName(), LayoutManager.class.getSimpleName(), LayoutManager2.class.getName(),
-                LayoutManager2.class.getSimpleName());
+    public List<Class> getHandledTypes() {
+        return Collections.singletonList(LayoutManager.class);
     }
 
     @Override

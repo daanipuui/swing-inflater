@@ -4,14 +4,14 @@ import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.type.TypeConversion;
 
 import java.awt.Dimension;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DimensionConversion implements TypeConversion<Dimension> {
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Dimension.class.getName(), Dimension.class.getSimpleName(), "dimension");
+    public List<Class> getHandledTypes() {
+        return Collections.singletonList(Dimension.class);
     }
 
     @Override

@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,8 +20,8 @@ import static com.danielpuiu.swing.inflater.util.ObjectUtil.cast;
 public class BorderConversion implements TypeConversion<Border> {
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Border.class.getName(), Border.class.getSimpleName(), "border");
+    public List<Class> getHandledTypes() {
+        return Collections.singletonList(Border.class);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class BorderConversion implements TypeConversion<Border> {
         String[] arguments = Arrays.copyOfRange(values, 1, values.length);
         for (Method method : methods) {
             try {
-                return cast(method.invoke(null, convertValues(packageProvider, method.getGenericParameterTypes(), arguments)));
+                return cast(method.invoke(null, convertValues(packageProvider, method.getParameterTypes(), arguments)));
             } catch (IllegalAccessException | InvocationTargetException | ClassCastException e) {
                 // nothing to do
             }

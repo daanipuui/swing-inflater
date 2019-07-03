@@ -3,19 +3,19 @@ package com.danielpuiu.swing.inflater.type.conversion;
 import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.type.TypeConversion;
 
-import java.awt.Color;
+import java.awt.Component;
 import java.util.Collections;
 import java.util.List;
 
-public class ColorConversion implements TypeConversion<Color> {
+public class ComponentConversion implements TypeConversion<Component> {
 
     @Override
     public List<Class> getHandledTypes() {
-        return Collections.singletonList(Color.class);
+        return Collections.singletonList(Component.class);
     }
 
     @Override
-    public Color convertLiteral(PackageProvider packageProvider, String value) {
-        return convertLiteral(Color::getColor, value);
+    public Component convertLiteral(PackageProvider packageProvider, String value) {
+        return convert(packageProvider, value);
     }
 }

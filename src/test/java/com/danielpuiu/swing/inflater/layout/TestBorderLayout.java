@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.LayoutManager;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestBorderLayout {
+
+    @SuppressWarnings("unused")
+    public static ActionListener onWestClick() {
+        return e -> System.exit(-1);
+    }
 
     @Test
     public void testBorderLayout() {

@@ -6,15 +6,15 @@ import com.danielpuiu.swing.inflater.type.TypeConversion;
 import java.util.Arrays;
 import java.util.List;
 
-public class DoubleConversion implements TypeConversion<Double> {
+public class FloatConversion implements TypeConversion<Float> {
 
     @Override
     public List<Class> getHandledTypes() {
-        return Arrays.asList(Double.class, double.class);
+        return Arrays.asList(Float.class, float.class);
     }
 
     @Override
-    public Double convertLiteral(PackageProvider packageProvider, String value) {
-        return convertLiteral(Double::parseDouble, value);
+    public Float convertLiteral(PackageProvider packageProvider, String value) {
+        return convertLiteral(Float::parseFloat, value);
     }
 }

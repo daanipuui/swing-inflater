@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
@@ -32,12 +33,14 @@ import static com.danielpuiu.swing.inflater.type.TypeConverter.convertValues;
 import static com.danielpuiu.swing.inflater.util.ObjectUtil.cast;
 import static javafx.scene.control.IndexRange.VALUE_DELIMITER;
 
-class ComponentHandler extends DefaultHandler implements TypeConversion {
+class ComponentHandler extends DefaultHandler implements TypeConversion<Component> {
 
     private static final String Q_NAME_DELIMITER = ":";
     private static final String EMPTY_PREFIX = "";
     private static final String LAYOUT_CONSTRAINT_PREFIX = "layout";
+
     private static final String SETTER_PREFIX = "set";
+    private static final String LISTENER_PREFIX = "add";
 
     private static final int PREFIX = 0;
     private static final int LOCAL_NAME = 1;
@@ -105,12 +108,12 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
     }
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Component.class.getName(), Component.class.getSimpleName(), "component");
+    public List<Class> getHandledTypes() {
+        return Collections.singletonList(Component.class);
     }
 
     @Override
-    public Object convertLiteral(PackageProvider packageProvider, String value) {
+    public Component convertLiteral(PackageProvider packageProvider, String value) {
         return getComponent(value);
     }
 
@@ -182,7 +185,8 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
     }
 
     private String getMethodName(String name) {
-        return SETTER_PREFIX + StringUtil.capitalize(name);
+        String prefix = name.toLowerCase().endsWith("listener")? LISTENER_PREFIX: SETTER_PREFIX;
+        return prefix + StringUtil.capitalize(name);
     }
 
     private boolean callCandidateMethods(Object object, String methodName, String[] arguments) {
@@ -208,7 +212,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion {
     private void invokeMethod(Object object, List<Method> candidateMethods, String[] arguments) {
         for (Method method: candidateMethods) {
             try {
-                method.invoke(object, convertValues(contextProvider, method.getGenericParameterTypes(), arguments));
+                method.invoke(object, convertValues(contextProvider, method.getParameterTypes(), arguments));
                 if (logger.isDebugEnabled()) {
                     logger.debug("Invoked method [{}] on [{}] with parameters {}.", method.getName(), object, Arrays.toString(arguments));
                 }

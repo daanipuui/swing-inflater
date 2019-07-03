@@ -9,8 +9,8 @@ import java.util.List;
 public class BooleanConversion implements TypeConversion<Boolean> {
 
     @Override
-    public List<String> getHandledTypes() {
-        return Arrays.asList(Boolean.class.getName(), Boolean.class.getSimpleName(), "boolean");
+    public List<Class> getHandledTypes() {
+        return Arrays.asList(Boolean.class, boolean.class);
     }
 
     @Override

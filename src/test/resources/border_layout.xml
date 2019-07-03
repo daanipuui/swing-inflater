@@ -25,6 +25,7 @@
     <JButton
         name="west"
         text="west"
+        actionListener="com.danielpuiu.swing.inflater.layout.TestBorderLayout::onWestClick"
         layout:position="BorderLayout.WEST"/>
 
 </JPanel>

@@ -60,7 +60,14 @@
         <JPanel
             layout:width="1"
             layout:height="1"
-            background="#00FF00"/>
+            background="#00FF00">
+
+            <JButton
+                name="exit"
+                text="exit"
+                actionListener="com.danielpuiu.swing.inflater.layout.StartSwingApplication::onClick"/>
+
+        </JPanel>
 
     </JPanel>
 

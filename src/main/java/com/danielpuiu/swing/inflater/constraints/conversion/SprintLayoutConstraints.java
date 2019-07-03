@@ -47,7 +47,7 @@ public class SprintLayoutConstraints implements ConstraintsConversion<SpringLayo
                 throw new IllegalArgumentException(String.format("[%s] contains [%d] arguments. Required at most 2.", entry.getValue(), values.length));
             }
 
-            Component component = TypeConverter.convert(contextProvider, Component.class.getSimpleName(), values[0].trim());
+            Component component = TypeConverter.convert(contextProvider, Component.class, values[0].trim());
             int pad = values.length == 2? Integer.parseInt(values[1].trim()): 0;
 
             Spring spring = Spring.sum(Spring.constant(pad), layoutManager.getConstraint(edges[1], component));

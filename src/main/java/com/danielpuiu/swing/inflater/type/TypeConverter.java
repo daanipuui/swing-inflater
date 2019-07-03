@@ -4,13 +4,23 @@ import com.danielpuiu.swing.inflater.PackageProvider;
 import com.danielpuiu.swing.inflater.exceptions.NoArgumentConstructorNotFoundException;
 import com.danielpuiu.swing.inflater.type.conversion.BooleanConversion;
 import com.danielpuiu.swing.inflater.type.conversion.BorderConversion;
+import com.danielpuiu.swing.inflater.type.conversion.ByteConversion;
+import com.danielpuiu.swing.inflater.type.conversion.CharacterConversion;
 import com.danielpuiu.swing.inflater.type.conversion.ColorConversion;
+import com.danielpuiu.swing.inflater.type.conversion.ComponentConversion;
 import com.danielpuiu.swing.inflater.type.conversion.DimensionConversion;
 import com.danielpuiu.swing.inflater.type.conversion.DoubleConversion;
 import com.danielpuiu.swing.inflater.type.conversion.EventListenerConversion;
+import com.danielpuiu.swing.inflater.type.conversion.FileConversion;
+import com.danielpuiu.swing.inflater.type.conversion.FloatConversion;
+import com.danielpuiu.swing.inflater.type.conversion.FontConversion;
 import com.danielpuiu.swing.inflater.type.conversion.InsetsConversion;
 import com.danielpuiu.swing.inflater.type.conversion.IntegerConversion;
 import com.danielpuiu.swing.inflater.type.conversion.LayoutConversion;
+import com.danielpuiu.swing.inflater.type.conversion.LocaleConversion;
+import com.danielpuiu.swing.inflater.type.conversion.LongConversion;
+import com.danielpuiu.swing.inflater.type.conversion.RectangleConversion;
+import com.danielpuiu.swing.inflater.type.conversion.ShortConversion;
 import com.danielpuiu.swing.inflater.type.conversion.StringConversion;
 
 import java.util.Arrays;
@@ -34,7 +44,17 @@ public class TypeConverter {
                 DimensionConversion.class,
                 BorderConversion.class,
                 InsetsConversion.class,
-                EventListenerConversion.class
+                EventListenerConversion.class,
+                FloatConversion.class,
+                ByteConversion.class,
+                LongConversion.class,
+                ShortConversion.class,
+                ComponentConversion.class,
+                FontConversion.class,
+                CharacterConversion.class,
+                LocaleConversion.class,
+                FileConversion.class,
+                RectangleConversion.class
         ).forEach(TypeConverter::registerConverter);
     }
 

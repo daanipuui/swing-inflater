@@ -21,7 +21,7 @@
         layout:below="#1"
         layout:centerVerticalInParent="true"/>
 
-    <com.danielpuiu.swing.inflater.layout.RelativeLayout
+    <io.github.daanipuui.swing.inflater.layout.RelativeLayout
             margins="10,10,10,10"
             padding="10,10,10,10"/>
 

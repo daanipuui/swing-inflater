@@ -19,8 +19,8 @@
     </properties>
 
     <scm>
-        <connection>https://github.com/daanipuui/swing-inflater</connection>
-        <developerConnection>https://github.com/daanipuui/swing-inflater</developerConnection>
+        <connection>https://github.com/daanipuui/swing-inflater.git</connection>
+        <developerConnection>https://github.com/daanipuui/swing-inflater.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

@@ -18,6 +18,12 @@
         <junit.version>4.12</junit.version>
     </properties>
 
+    <scm>
+        <connection>https://github.com/daanipuui/swing-inflater</connection>
+        <developerConnection>https://github.com/daanipuui/swing-inflater</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>

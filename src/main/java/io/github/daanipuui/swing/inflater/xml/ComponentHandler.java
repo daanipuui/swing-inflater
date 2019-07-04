@@ -218,9 +218,12 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
 
                 return;
             } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                logger.debug("Cannot invoke method [{}] on [{}] with parameters {} because {}", method.getName(), object, Arrays.toString(arguments), e);
+                logger.debug("Cannot invoke method [{}] on [{}] with parameters [{}] because [{}]", method.getName(), object, Arrays.toString(arguments), e.getMessage());
             }
         }
+
+        String errorMessage = String.format("No candidate method run successfully on [%s].", object);
+        throw new IllegalStateException(errorMessage);
     }
 
     private void addLayoutComponent(JComponent parent, JComponent element, Map<String, String> layoutConstraints) {

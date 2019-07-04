@@ -7,9 +7,9 @@ Xml Inflater for Java Swing
 
 ```
 <dependency>
-    <groupId>com.danielpuiu</groupId>
+    <groupId>io.github.daanipuui</groupId>
     <artifactId>swing-inflater</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 

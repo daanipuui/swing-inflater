@@ -11,4 +11,14 @@
         name="second"
         layout:cardId="SECOND"/>
 
+    <JPanel
+        name="third"
+        layout:cardId="THIRD">
+
+        <JTree
+            name="file-tree"
+            selectionRows="1, 2, 5"/>
+
+    </JPanel>
+
 </JPanel>

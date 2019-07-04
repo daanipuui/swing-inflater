@@ -23,6 +23,7 @@ import com.danielpuiu.swing.inflater.type.conversion.RectangleConversion;
 import com.danielpuiu.swing.inflater.type.conversion.ShortConversion;
 import com.danielpuiu.swing.inflater.type.conversion.StringConversion;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +64,10 @@ public class TypeConverter {
     }
 
     public static <T> T convert(PackageProvider packageProvider, Class type, String value) {
+        if (type.isArray()) {
+            return convertArray(packageProvider, type, value);
+        }
+
         if (!REGISTERED_CONVERTERS.containsKey(type)) {
             tryRegisterSubType(type);
         }
@@ -103,6 +108,19 @@ public class TypeConverter {
         }
 
         return convertedValues;
+    }
+
+    private static <T> T convertArray(PackageProvider packageProvider, Class type, String value) {
+        String[] values = value.split(",");
+
+        Class componentType = type.getComponentType();
+        T array = cast(Array.newInstance(componentType, values.length));
+
+        for (int i = 0; i < values.length; i++) {
+            Array.set(array, i, convert(packageProvider, componentType, values[i]));
+        }
+
+        return array;
     }
 
     private static void tryRegisterSubType(Class type) {

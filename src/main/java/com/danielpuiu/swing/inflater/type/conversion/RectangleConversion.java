@@ -17,7 +17,7 @@ public class RectangleConversion implements TypeConversion<Rectangle> {
 
     @Override
     public Rectangle convertLiteral(PackageProvider packageProvider, String value) {
-        int[] values = Arrays.stream(value.split(",")).mapToInt(Integer::parseInt).toArray();
+        int[] values = Arrays.stream(value.split(",")).map(String::trim).mapToInt(Integer::parseInt).toArray();
 
         switch (values.length) {
             case 0:

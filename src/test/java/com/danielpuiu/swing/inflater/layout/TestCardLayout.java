@@ -19,10 +19,10 @@ public class TestCardLayout {
     public void testCardLayout() {
         ComponentLoader loader = new ComponentLoader();
         JPanel container = loader.load(StartSwingApplication.class.getClassLoader().getResourceAsStream("card_layout.xml"));
-        assertEquals(2, container.getComponentCount());
+        assertEquals(3, container.getComponentCount());
 
-        List<String> names = Arrays.asList("first", "second");
-        for (int i = 0; i < 2; i++) {
+        List<String> names = Arrays.asList("first", "second", "third");
+        for (int i = 0; i < 3; i++) {
             Component component = container.getComponent(i);
             assertTrue(component instanceof JPanel);
             assertEquals(names.get(i), component.getName());

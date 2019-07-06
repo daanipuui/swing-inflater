@@ -6,7 +6,6 @@ import io.github.daanipuui.swing.inflater.constraints.ConstraintsConverter;
 import io.github.daanipuui.swing.inflater.type.TypeConversion;
 import io.github.daanipuui.swing.inflater.type.TypeConverter;
 import io.github.daanipuui.swing.inflater.util.StringUtil;
-import io.github.daanipuui.swing.inflater.util.ObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -30,6 +29,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.github.daanipuui.swing.inflater.util.ObjectUtil.cast;
 import static javafx.scene.control.IndexRange.VALUE_DELIMITER;
 
 class ComponentHandler extends DefaultHandler implements TypeConversion<Component> {
@@ -37,9 +37,6 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
     private static final String Q_NAME_DELIMITER = ":";
     private static final String EMPTY_PREFIX = "";
     private static final String LAYOUT_CONSTRAINT_PREFIX = "layout";
-
-    private static final String SETTER_PREFIX = "set";
-    private static final String LISTENER_PREFIX = "add";
 
     private static final int PREFIX = 0;
     private static final int LOCAL_NAME = 1;
@@ -62,11 +59,11 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
     }
 
     <T> T getRoot() {
-        return ObjectUtil.cast(root);
+        return cast(root);
     }
 
     <T extends JComponent> T getComponent(String name) {
-        return ObjectUtil.cast(nameToComponent.get(name));
+        return cast(nameToComponent.get(name));
     }
 
     @Override
@@ -76,16 +73,16 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
         Map<String, Map<String, String>> attributesByPrefix = getAttributesByPrefix(attributes);
         buildObject(object, attributesByPrefix.remove(EMPTY_PREFIX));
 
-        JComponent parent = ObjectUtil.cast(elements.peekLast());
+        JComponent parent = cast(elements.peekLast());
         elements.add(object);
 
         if (object instanceof LayoutManager) {
-            parent.setLayout(ObjectUtil.cast(object));
+            parent.setLayout(cast(object));
             logger.debug("Set layout [{}] on element [{}].", object.getClass().getSimpleName(), parent);
             return;
         }
 
-        JComponent element = ObjectUtil.cast(object);
+        JComponent element = cast(object);
         if (Objects.isNull(parent)) {
             root = element;
             return;
@@ -122,12 +119,9 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
             return cls;
         }
 
-        for (String packageName: contextProvider.getPackageNames()) {
-            try {
-                return ObjectUtil.cast(Class.forName(packageName + className));
-            } catch (ClassNotFoundException e) {
-                // nothing to do
-            }
+        cls = contextProvider.getClass(className);
+        if (cls != null) {
+            return cls;
         }
 
         throw new IllegalStateException(String.format("Cannot load class [%s].", className));
@@ -172,8 +166,13 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
         }
 
         if (object instanceof JComponent) {
-            JComponent element = ObjectUtil.cast(object);
+            JComponent element = cast(object);
             String name = element.getName();
+            if (name == null) {
+                logger.warn("Null element name found. Using toString instead.");
+                name = element.toString();
+            }
+
             if (nameToComponent.containsKey(name)) {
                 logger.warn("Duplicate element name [{}] found. Using toString instead.", name);
                 name = element.toString();
@@ -184,8 +183,19 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
     }
 
     private String getMethodName(String name) {
-        String prefix = name.toLowerCase().endsWith("listener")? LISTENER_PREFIX: SETTER_PREFIX;
-        return prefix + StringUtil.capitalize(name);
+        return getMethodPrefix(name) + StringUtil.capitalize(name);
+    }
+
+    private String getMethodPrefix(String name) {
+        if (name.toLowerCase().endsWith("listener")) {
+            return "add";
+        }
+
+        if ("clientProperty".equals(name)) {
+            return "put";
+        }
+
+        return "set";
     }
 
     private boolean callCandidateMethods(Object object, String methodName, String[] arguments) {
@@ -222,7 +232,7 @@ class ComponentHandler extends DefaultHandler implements TypeConversion<Componen
             }
         }
 
-        String errorMessage = String.format("No candidate method run successfully on [%s].", object);
+        String errorMessage = String.format("No candidate method run successfully on [%s] for arguments [%s].", object, Arrays.toString(arguments));
         throw new IllegalStateException(errorMessage);
     }
 

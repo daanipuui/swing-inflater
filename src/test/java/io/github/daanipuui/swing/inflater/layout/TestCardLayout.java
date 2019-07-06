@@ -18,7 +18,7 @@ public class TestCardLayout {
     @Test
     public void testCardLayout() {
         ComponentLoader loader = new ComponentLoader();
-        JPanel container = loader.load(StartSwingApplication.class.getClassLoader().getResourceAsStream("card_layout.xml"));
+        JPanel container = loader.load(getClass().getClassLoader().getResourceAsStream("card_layout.xml"));
         assertEquals(3, container.getComponentCount());
 
         List<String> names = Arrays.asList("first", "second", "third");

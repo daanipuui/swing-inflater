@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<JPanel>
+
+    <BorderLayout/>
+
+    <JPanel layout:position="CENTER"
+            name="mainPanel">
+
+        <BorderLayout/>
+
+        <JPanel layout:position="CENTER"
+                name="numberPanel">
+
+            <GridLayout rows="4"
+                        columns="3"/>
+
+            <JButton text="7"
+                     clientProperty="NUMBER_PROPERTY:String, 7:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="8"
+                     clientProperty="NUMBER_PROPERTY:String, 8:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="9"
+                     clientProperty="NUMBER_PROPERTY:String, 9:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="4"
+                     clientProperty="NUMBER_PROPERTY:String, 4:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="5"
+                     clientProperty="NUMBER_PROPERTY:String, 5:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="6"
+                     clientProperty="NUMBER_PROPERTY:String, 6:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="1"
+                     clientProperty="NUMBER_PROPERTY:String, 1:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="2"
+                     clientProperty="NUMBER_PROPERTY:String, 2:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="3"
+                     clientProperty="NUMBER_PROPERTY:String, 3:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="."
+                     actionListener="CalculatorTest::onDecimalClick"/>
+
+            <JButton text="0"
+                     clientProperty="NUMBER_PROPERTY:String, 0:int"
+                     actionListener="CalculatorTest::onNumberClick"/>
+
+            <JButton text="EXIT"
+                     mnemonic="KeyEvent.VK_C"
+                     actionListener="CalculatorTest::onExitClick"/>
+
+        </JPanel>
+
+        <JPanel layout:position="EAST"
+                name="operatorPanel">
+
+            <GridLayout rows="4"
+                        columns="1"/>
+
+            <JButton text="+"
+                     clientProperty="OPERATOR_PROPERTY:String, Operator.PLUS:int"
+                     actionListener="CalculatorTest::onOperatorClick"/>
+
+            <JButton text="-"
+                     clientProperty="OPERATOR_PROPERTY:String, Operator.MINUS:int"
+                     actionListener="CalculatorTest::onOperatorClick"/>
+
+            <JButton text="*"
+                     clientProperty="OPERATOR_PROPERTY:String, Operator.MULTIPLY:int"
+                     actionListener="CalculatorTest::onOperatorClick"/>
+
+            <JButton text="/"
+                     clientProperty="OPERATOR_PROPERTY:String, Operator.DIVIDE:int"
+                     actionListener="CalculatorTest::onOperatorClick"/>
+
+        </JPanel>
+
+        <JPanel layout:position="SOUTH"
+                name="clearPanel">
+
+            <GridLayout rows="1"
+                        columns="3"/>
+
+            <JButton text="C"
+                     actionListener="CalculatorTest::onClearClick"/>
+
+            <JButton text="CE"
+                     actionListener="CalculatorTest::onClearClick"/>
+
+            <JButton text="="
+                     clientProperty="OPERATOR_PROPERTY:String, Operator.EQUALS:int"
+                     actionListener="CalculatorTest::onOperatorClick"/>
+
+        </JPanel>
+
+        <JTextArea layout:position="NORTH"
+                   name="lcdDisplay"
+                   font="DIALOG, BOLD, 18"/>
+
+    </JPanel>
+
+    <JLabel layout:position="SOUTH"
+            name="errorDisplay"
+            text=" "
+            font="DIALOG, BOLD, 12"/>
+
+</JPanel>

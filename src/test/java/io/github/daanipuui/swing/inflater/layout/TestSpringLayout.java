@@ -12,7 +12,7 @@ public class TestSpringLayout {
     @Test
     public void testSpringLayout() {
         ComponentLoader loader = new ComponentLoader();
-        JPanel container = loader.load(StartSwingApplication.class.getClassLoader().getResourceAsStream("spring_layout.xml"));
+        JPanel container = loader.load(getClass().getClassLoader().getResourceAsStream("spring_layout.xml"));
         assertEquals(5, container.getComponentCount());
     }
 }

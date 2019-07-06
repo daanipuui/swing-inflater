@@ -3,7 +3,6 @@ package io.github.daanipuui.swing.inflater.type.conversion;
 import io.github.daanipuui.swing.inflater.PackageProvider;
 import io.github.daanipuui.swing.inflater.type.TypeConversion;
 import io.github.daanipuui.swing.inflater.util.StringUtil;
-import io.github.daanipuui.swing.inflater.util.ObjectUtil;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.github.daanipuui.swing.inflater.type.TypeConverter.convertValues;
+import static io.github.daanipuui.swing.inflater.util.ObjectUtil.cast;
 
 public class BorderConversion implements TypeConversion<Border> {
 
@@ -37,7 +37,7 @@ public class BorderConversion implements TypeConversion<Border> {
         String[] arguments = Arrays.copyOfRange(values, 1, values.length);
         for (Method method : methods) {
             try {
-                return ObjectUtil.cast(method.invoke(null, convertValues(packageProvider, method.getParameterTypes(), arguments)));
+                return cast(method.invoke(null, convertValues(packageProvider, method.getParameterTypes(), arguments)));
             } catch (IllegalAccessException | InvocationTargetException | ClassCastException e) {
                 // nothing to do
             }

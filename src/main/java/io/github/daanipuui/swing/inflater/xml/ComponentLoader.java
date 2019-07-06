@@ -9,6 +9,8 @@ import javax.swing.JComponent;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.awt.Component;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -55,6 +57,11 @@ public class ComponentLoader implements ContextProvider {
         importedPackageNames.addAll(packages);
     }
 
+    public void register(Package... packages) {
+        String[] packageNames = Stream.of(packages).map(Package::getName).toArray(String[]::new);
+        register(packageNames);
+    }
+
     public Set<String> getPackageNames() {
         return new HashSet<>(importedPackageNames);
     }
@@ -70,8 +77,10 @@ public class ComponentLoader implements ContextProvider {
     private Set<String> initPackageNames() {
         Set<String> set = new HashSet<>();
         set.add("");
-        set.add("java.awt.");
-        set.add("javax.swing.");
+
+        for (Class cls: new Class[] {Object.class, Component.class, ComponentEvent.class, JComponent.class}) {
+            set.add(cls.getPackage().getName() + ".");
+        }
 
         return set;
     }

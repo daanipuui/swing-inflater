@@ -19,7 +19,7 @@ public class TestGridBagLayout {
     @Test
     public void testGridBagLayout() {
         ComponentLoader loader = new ComponentLoader();
-        JPanel container = loader.load(StartSwingApplication.class.getClassLoader().getResourceAsStream("grid_bag_layout.xml"));
+        JPanel container = loader.load(getClass().getClassLoader().getResourceAsStream("grid_bag_layout.xml"));
         assertEquals(5, container.getComponentCount());
 
         List<String> names = Arrays.asList("Button 1", "Button 2", "Button 3", "Button 4", "Button 5");

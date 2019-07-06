@@ -22,12 +22,13 @@ import io.github.daanipuui.swing.inflater.type.conversion.LongConversion;
 import io.github.daanipuui.swing.inflater.type.conversion.RectangleConversion;
 import io.github.daanipuui.swing.inflater.type.conversion.ShortConversion;
 import io.github.daanipuui.swing.inflater.type.conversion.StringConversion;
-import io.github.daanipuui.swing.inflater.util.ObjectUtil;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.github.daanipuui.swing.inflater.util.ObjectUtil.cast;
 
 public class TypeConverter {
 
@@ -67,11 +68,15 @@ public class TypeConverter {
             return convertArray(packageProvider, type, value);
         }
 
+        if (Object.class.equals(type)) {
+            return convertObject(packageProvider, value);
+        }
+
         if (!REGISTERED_CONVERTERS.containsKey(type)) {
             tryRegisterSubType(type);
         }
 
-        return ObjectUtil.cast(REGISTERED_CONVERTERS.get(type).convert(packageProvider, value));
+        return cast(REGISTERED_CONVERTERS.get(type).convert(packageProvider, value));
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -113,13 +118,30 @@ public class TypeConverter {
         String[] values = value.split(",");
 
         Class componentType = type.getComponentType();
-        T array = ObjectUtil.cast(Array.newInstance(componentType, values.length));
+        T array = cast(Array.newInstance(componentType, values.length));
 
         for (int i = 0; i < values.length; i++) {
             Array.set(array, i, convert(packageProvider, componentType, values[i]));
         }
 
         return array;
+    }
+
+    private static <T> T convertObject(PackageProvider packageProvider, String value) {
+        String[] values = value.split(":");
+        if (values.length != 2) {
+            String errorMessage = String.format("Value [%s] doesn't contain type information. Expected [value:type].", value);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        String type = values[1].trim();
+        Class<?> cls = packageProvider.getClass(type);
+        if (cls == null) {
+            String errorMessage = String.format("No class found for class name [%s].", type);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        return convert(packageProvider, cls, values[0].trim());
     }
 
     private static void tryRegisterSubType(Class type) {

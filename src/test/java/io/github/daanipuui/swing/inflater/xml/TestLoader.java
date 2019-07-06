@@ -15,7 +15,7 @@ public class TestLoader {
     @Test
     public void testLoader() {
         ComponentLoader loader = new ComponentLoader();
-        JPanel container = loader.load(getClass().getClassLoader().getResourceAsStream("layout.xml"));
+        JPanel container = loader.load(getClass().getClassLoader().getResourceAsStream("relative_layout.xml"));
 
         assertEquals(5, container.getComponents().length);
 

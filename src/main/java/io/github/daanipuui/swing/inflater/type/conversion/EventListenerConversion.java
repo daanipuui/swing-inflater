@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static io.github.daanipuui.swing.inflater.util.ObjectUtil.cast;
@@ -32,8 +31,14 @@ public class EventListenerConversion implements TypeConversion<EventListener> {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        Class cls = getClass(packageProvider, values[0]);
-        Method method = getMethod(cls, values[1]);
+        String type = values[0].trim();
+        Class cls = packageProvider.getClass(type);
+        if (cls == null) {
+            String errorMessage = String.format("Unknown class name [%s]. Register the package or use full qualified name.", type);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        Method method = getMethod(cls, values[1].trim());
         return invokeMethod(method);
     }
 
@@ -43,29 +48,6 @@ public class EventListenerConversion implements TypeConversion<EventListener> {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);
         }
-    }
-
-    private Class getClass(PackageProvider packageProvider, String className) {
-        List<Class> classes = packageProvider.getPackageNames().stream().map(packageName -> {
-            try {
-                return Class.forName(packageName + className);
-            } catch (ClassNotFoundException e) {
-                return null;
-            }
-        }).collect(Collectors.toList());
-        classes.removeIf(Objects::isNull);
-
-        if (classes.size() > 1) {
-            String errorMessage = String.format("Ambiguous class name [%s]. Found [%d] candidates: [%s].", className, classes.size(), classes);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
-        if (classes.isEmpty()) {
-            String errorMessage = String.format("Unknown class name [%s]. Register the package or use full qualified name.", className);
-            throw new IllegalArgumentException(errorMessage);
-        }
-
-        return classes.get(0);
     }
 
     private Method getMethod(Class cls, String methodName) {

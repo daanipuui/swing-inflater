@@ -4,7 +4,6 @@ import io.github.daanipuui.swing.inflater.Conversion;
 import io.github.daanipuui.swing.inflater.PackageProvider;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
 public interface TypeConversion<T> extends Conversion {
@@ -15,7 +14,7 @@ public interface TypeConversion<T> extends Conversion {
 
     default T convert(PackageProvider packageProvider, String value) {
         T object = convertConstant(packageProvider, value);
-        if (Objects.nonNull(object)) {
+        if (object != null) {
             return object;
         }
 
@@ -26,7 +25,7 @@ public interface TypeConversion<T> extends Conversion {
         try {
             return function.apply(value.trim());
         } catch (Exception e) {
-            return null;
+            throw new TypeConversionException(this, value);
         }
     }
 }

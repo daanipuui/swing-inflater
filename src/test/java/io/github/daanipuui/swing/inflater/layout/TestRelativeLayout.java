@@ -1,24 +1,18 @@
 package io.github.daanipuui.swing.inflater.layout;
 
 import io.github.daanipuui.swing.inflater.xml.ComponentLoader;
+import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import static org.junit.Assert.assertEquals;
 
 public class TestRelativeLayout {
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-            ComponentLoader loader = new ComponentLoader();
-            JPanel container = loader.load(TestRelativeLayout.class.getClassLoader().getResourceAsStream("layout.xml"));
-
-            frame.getContentPane().add(container);
-            frame.pack();
-            frame.setVisible(true);
-        });
+    @Test
+    public void testRelativeLayout() {
+        ComponentLoader loader = new ComponentLoader();
+        JPanel container = loader.load(getClass().getClassLoader().getResourceAsStream("spring_layout.xml"));
+        assertEquals(5, container.getComponentCount());
     }
 }

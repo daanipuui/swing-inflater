@@ -1,6 +1,7 @@
 package io.github.daanipuui.swing.inflater.constraints.conversion;
 
 import io.github.daanipuui.swing.inflater.ContextProvider;
+import io.github.daanipuui.swing.inflater.EnhancedPackageProvider;
 import io.github.daanipuui.swing.inflater.PackageProvider;
 import io.github.daanipuui.swing.inflater.constraints.ConstraintsConversion;
 import io.github.daanipuui.swing.inflater.type.TypeConverter;

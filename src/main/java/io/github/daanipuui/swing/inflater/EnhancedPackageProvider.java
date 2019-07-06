@@ -1,15 +1,13 @@
-package io.github.daanipuui.swing.inflater.constraints.conversion;
-
-import io.github.daanipuui.swing.inflater.PackageProvider;
+package io.github.daanipuui.swing.inflater;
 
 import java.util.HashSet;
 import java.util.Set;
 
-class EnhancedPackageProvider implements PackageProvider {
+public class EnhancedPackageProvider implements PackageProvider {
 
     private Set<String> packageNames;
 
-    EnhancedPackageProvider(PackageProvider packageProvider) {
+    public EnhancedPackageProvider(PackageProvider packageProvider) {
         packageNames = new HashSet<>(packageProvider.getPackageNames());
     }
 
@@ -18,7 +16,7 @@ class EnhancedPackageProvider implements PackageProvider {
         return packageNames;
     }
 
-    void addClass(Class<?> cls) {
+    public void addClass(Class<?> cls) {
         if (packageNames.contains(cls.getPackage().getName() + ".")) {
             packageNames.add(cls.getName() + ".");
         }

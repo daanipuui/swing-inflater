@@ -21,22 +21,14 @@ public class LayoutConversion implements TypeConversion<LayoutManager> {
     @Override
     public LayoutManager convertLiteral(PackageProvider packageProvider, String value) {
         try {
-            return (LayoutManager) getClass(packageProvider, value).newInstance();
+            Class<LayoutManager> layoutManagerClass = packageProvider.getClass(value);
+            if (layoutManagerClass == null) {
+                throw new ClassNotFoundException(value);
+            }
+            return layoutManagerClass.newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             logger.error("Layout conversion failed because [{}].", e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         }
-    }
-
-    private Class<?> getClass(PackageProvider packageProvider, String value) throws ClassNotFoundException {
-        for (String packageName : packageProvider.getPackageNames()) {
-            try {
-                return Class.forName(packageName + value);
-            } catch (ClassNotFoundException e) {
-                // nothing to do
-            }
-        }
-
-        throw new ClassNotFoundException(value);
     }
 }

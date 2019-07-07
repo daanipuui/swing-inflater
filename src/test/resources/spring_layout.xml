@@ -1,40 +1,35 @@
 <?xml version="1.0"?>
-<JPanel
-    name="#contentPanel">
+<JPanel xmlns:layout="https://github.com/daanipuui/swing-inflater/swing-inflater.xsd"
+        name="#contentPanel">
 
     <SpringLayout/>
 
-    <JLabel
-            name="#1"
+    <JLabel name="#1"
             background="0xFF0096"
             text="Description"/>
 
-    <JTextField
-            name="#2"
-            background="0xFF0000"
-            layout:rightOf="#1"
-            layout:centerVertical="#1"
-            layout:alignRight="#contentPanel"/>
+    <JTextField name="#2"
+                background="0xFF0000"
+                layout:rightOf="#1"
+                layout:centerVertical="#1"
+                layout:alignRight="#contentPanel"/>
 
-    <JLabel
-            name="#3"
+    <JLabel name="#3"
             background="0xFF00FF"
             text="Market name"
             layout:below="#1"
             layout:centerVertical="#contentPanel"/>
 
-    <JTextField
-            name="#4"
-            background="0x00FF00"
-            layout:rightOf="#3"
-            layout:alignLeft="#2"
-            layout:alignRight="#contentPanel, -100"
-            layout:centerVertical="#contentPanel"/>
+    <JTextField name="#4"
+                background="0x00FF00"
+                layout:rightOf="#3"
+                layout:alignLeft="#2"
+                layout:alignRight="#contentPanel, -100"
+                layout:centerVertical="#contentPanel"/>
 
-    <JButton
-            name="#5"
-            text="click me"
-            layout:below="#4"
-            layout:alignRight="#contentPanel, -100"/>
+    <JButton name="#5"
+             text="click me"
+             layout:below="#4"
+             layout:alignRight="#contentPanel, -100"/>
 
 </JPanel>

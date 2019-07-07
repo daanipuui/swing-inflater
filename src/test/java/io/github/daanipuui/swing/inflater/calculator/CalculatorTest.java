@@ -11,17 +11,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.io.InputStream;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import static io.github.daanipuui.swing.inflater.util.TestUtil.resizeFrame;
+import static io.github.daanipuui.swing.inflater.util.TestUtil.showFrame;
+import static io.github.daanipuui.swing.inflater.util.TestUtil.testComponentBounds;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -180,15 +178,7 @@ public class CalculatorTest {
         assertEquals(Font.BOLD, errorDisplayFont.getStyle());
         assertEquals(12, errorDisplayFont.getSize());
 
-        AtomicBoolean resized = new AtomicBoolean();
-        frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent evt) {
-                resized.set(true);
-            }
-        });
-
-        frame.setSize(new Dimension(1920, 1080));
-        while (!Thread.currentThread().isInterrupted() && !resized.get());
+        resizeFrame(frame, 1920, 1080, errorDisplay);
 
         testComponentBounds(mainPanel, 0, 0, 1902, 1017);
         testComponentBounds(numberPanel, 0, 24, 1861, 967);
@@ -229,13 +219,7 @@ public class CalculatorTest {
 
         resetState();
 
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        frame.getContentPane().add(container);
-        frame.pack();
-        frame.setVisible(true);
-
-        return frame;
+        return showFrame(container);
     }
 
     private void testNumberButton(JButton button, int value) {
@@ -279,13 +263,6 @@ public class CalculatorTest {
         ActionListener[] actionListeners = button.getActionListeners();
         assertEquals(1, actionListeners.length);
         assertEquals(onClearClick(), actionListeners[0]);
-    }
-
-    private void testComponentBounds(JComponent component, int x, int y, int width, int height) {
-        assertEquals(x, component.getX());
-        assertEquals(y, component.getY());
-        assertEquals(width, component.getWidth());
-        assertEquals(height, component.getHeight());
     }
 
     @SuppressWarnings("WeakerAccess")

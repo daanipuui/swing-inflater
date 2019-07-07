@@ -1,23 +1,33 @@
 <?xml version="1.0"?>
-<JPanel>
+<JPanel xmlns:layout="https://github.com/daanipuui/swing-inflater/swing-inflater.xsd">
 
     <CardLayout/>
 
     <JPanel
         name="first"
-        layout:cardId="FIRST"/>
+        layout:cardId="FIRST">
+
+        <JLabel text="This is on first card"/>
+
+    </JPanel>
 
     <JPanel
         name="second"
-        layout:cardId="SECOND"/>
+        layout:cardId="SECOND">
+
+        <JLabel text="This is on second card"/>
+
+    </JPanel>
 
     <JPanel
         name="third"
         layout:cardId="THIRD">
 
+        <JLabel text="This is on third card"/>
+
         <JTree
             name="file-tree"
-            selectionRows="1, 2, 5"/>
+            selectionRows="1, 2, 3"/>
 
     </JPanel>
 

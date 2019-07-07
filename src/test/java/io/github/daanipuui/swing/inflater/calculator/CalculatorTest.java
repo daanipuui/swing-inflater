@@ -2,6 +2,8 @@ package io.github.daanipuui.swing.inflater.calculator;
 
 import io.github.daanipuui.swing.inflater.xml.ComponentLoader;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -15,6 +17,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.io.InputStream;
 
 import static io.github.daanipuui.swing.inflater.util.TestUtil.resizeFrame;
@@ -25,6 +28,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CalculatorTest {
 
+    static final int PERFORMANCE_TEST_COUNT = 100;
+
     private static JTextArea LCD_DISPLAY;
     private static JLabel ERROR_DISPLAY;
 
@@ -33,6 +38,33 @@ public class CalculatorTest {
     private static double LAST_VALUE;
 
     private static int PREVIOUS_OPERATION;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Test
+    public void testPerformance() {
+        long total = 0;
+        long max = Long.MIN_VALUE;
+        long min = Long.MAX_VALUE;
+        for (int i = 0; i < PERFORMANCE_TEST_COUNT; i++) {
+            long start = System.nanoTime();
+            JFrame frame = loadXml();
+            long duration = System.nanoTime() - start;
+            total += duration;
+
+            if (duration > max) {
+                max = duration;
+            }
+
+            if (duration < min) {
+                min = duration;
+            }
+
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSED));
+        }
+
+        logger.info("Running [{}] xml loads took [{}] ns. Average = [{}]. Min = [{}]. Max = [{}].", PERFORMANCE_TEST_COUNT, total, total/ PERFORMANCE_TEST_COUNT, min, max);
+    }
 
     @Test
     public void testCalculator() {

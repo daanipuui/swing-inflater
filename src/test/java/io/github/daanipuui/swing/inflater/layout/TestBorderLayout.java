@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.github.daanipuui.swing.inflater.util.ObjectUtil.cast;
+import static io.github.daanipuui.swing.inflater.util.TestUtil.showFrame;
+import static io.github.daanipuui.swing.inflater.util.TestUtil.testComponentBounds;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.EAST;
 import static java.awt.BorderLayout.NORTH;
@@ -23,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TestBorderLayout {
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("WeakerAccess")
     public static ActionListener onWestClick() {
         return e -> System.exit(-1);
     }
@@ -49,5 +51,19 @@ public class TestBorderLayout {
         for (int i = 0; i < 5; i++) {
             assertEquals("Component #" + i, loader.getComponent(names.get(i)), borderLayout.getLayoutComponent(positions.get(i)));
         }
+
+        JButton button = (JButton) borderLayout.getLayoutComponent(container, WEST);
+        ActionListener[] actionListeners = button.getActionListeners();
+        assertEquals(1, actionListeners.length);
+        assertEquals(onWestClick(), actionListeners[0]);
+
+        showFrame(container);
+
+        testComponentBounds(container, 0, 0, 192, 78);
+        testComponentBounds(container.getComponent(0), 0, 0, 192, 26);
+        testComponentBounds(container.getComponent(1), 0, 52, 192, 26);
+        testComponentBounds(container.getComponent(2), 62, 26, 71, 26);
+        testComponentBounds(container.getComponent(3), 133, 26, 59, 26);
+        testComponentBounds(container.getComponent(4), 0, 26, 62, 26);
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<JPanel>
+<JPanel xmlns:layout="https://github.com/daanipuui/swing-inflater/swing-inflater.xsd">
 
     <BorderLayout/>
 

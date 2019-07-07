@@ -9,6 +9,8 @@ import java.util.List;
 
 public class ColorConversion implements TypeConversion<Color> {
 
+    private static final String COLOR_PROPERTY = "swing-inflater.color";
+
     @Override
     public List<Class> getHandledTypes() {
         return Collections.singletonList(Color.class);
@@ -16,6 +18,7 @@ public class ColorConversion implements TypeConversion<Color> {
 
     @Override
     public Color convertLiteral(PackageProvider packageProvider, String value) {
-        return convertLiteral(Color::getColor, value);
+        System.setProperty(COLOR_PROPERTY, value);
+        return convertLiteral(Color::getColor, COLOR_PROPERTY);
     }
 }

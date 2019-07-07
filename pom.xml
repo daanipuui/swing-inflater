@@ -69,6 +69,7 @@
                 <version>2.5.3</version>
                 <configuration>
                     <arguments>${release.parameters}</arguments>
+                    <releaseProfiles>release-sign-artifacts</releaseProfiles>
                 </configuration>
             </plugin>
             <plugin>
